@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import Video from 'react-native-video';
+import VideoPlayer from './components/VideoPlayer';
 import {
   Platform,
   StyleSheet,
@@ -34,7 +34,8 @@ export default class App extends Component<Props> {
         <Text style={styles.instructions}>
           {instructions}
         </Text>
-        <Video source={require('./data/woman_walk.mp4')}   // Can be a URL or a local file.
+        <VideoPlayer />
+        {/* <Video source={require('./data/woman_walk.mp4')}   // Can be a URL or a local file.
           poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
           ref={(ref) => {
             this.player = ref
@@ -56,7 +57,7 @@ export default class App extends Component<Props> {
           onError={this.videoError}               // Callback when video cannot be loaded
           onBuffer={this.onBuffer}                // Callback when remote video is buffering
           onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
-          style={styles.video} />
+          style={styles.video} /> */}
       </View>
     );
   }
