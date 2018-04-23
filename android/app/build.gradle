@@ -134,6 +134,10 @@ android {
             }
         }
     }
+
+    aaptOptions {
+        noCompress "mp4", "jpeg", "png"
+    }
 }
 
 dependencies {

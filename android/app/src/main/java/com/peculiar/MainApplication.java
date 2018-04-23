@@ -3,6 +3,9 @@ package com.peculiar;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.RNVideoEditorPackage;
+import com.brentvatne.react.ReactVideoPackage;
+import com.rnfs.RNFSPackage;
 import com.rnfs.RNFSPackage;
 import com.reactlibrary.RNVideoEditorPackage;
 import com.brentvatne.react.ReactVideoPackage;
@@ -27,7 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.asList(
             new MainReactPackage(),
             new RNFSPackage(),
-            new RNVideoEditorPackage(),
+
             new ReactVideoPackage()
       );
     }

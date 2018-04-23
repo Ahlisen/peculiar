@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import Video from "react-native-video";
-import RNVideoEditor from "react-native-video-editor";
+// import RNVideoEditor from "react-native-video-editor";
 import RNFS from "react-native-fs";
 
 const videoDir = "../data/";
@@ -26,13 +26,28 @@ export default class VideoPlayer extends Component {
     resizeMode: "contain",
     duration: 0.0,
     currentTime: 0.0,
-    paused: true
+    paused: true,
+    source: "videos/woman_walk.mp4" //"bundle-assets://videos/woman_walk.mp4" //require(videoDir + "woman_walk" + videoExt)
   };
 
   video: Video;
 
   onLoad = data => {
     this.setState({ duration: data.duration });
+
+    RNFS.readDirAssets("videos")
+      .then((files) => {
+          console.log("asset files:", files);
+          for (let file of files) {
+            console.log(file.path);
+            if(file.path === 'videos/skratt.mp4') {
+              this.setState({ source: file.path }); // "bundle-assets://" + 
+            }
+          }
+      })
+      .catch((err) => {
+        console.log("asset files error", err);
+      });
 
     // alert(RNFS.DocumentDirectoryPath);
     // const mainPath = Platform.select({
@@ -71,18 +86,18 @@ export default class VideoPlayer extends Component {
     //   alert("Read file error: ", error);
     // });
 
-    RNVideoEditor.merge(
-      [
-        "file://" + RNFS.DocumentDirectoryPath + "/data/woman_walk" + videoExt,
-        "file://" + RNFS.DocumentDirectoryPath + "/data/skratt" + videoExt
-      ],
-      results => {
-        alert("Error: " + results);
-      },
-      (results, file) => {
-        alert("Success : " + results + " file: " + file);
-      }
-    );
+    // RNVideoEditor.merge(
+    //   [
+    //     "file://" + RNFS.DocumentDirectoryPath + "/data/woman_walk" + videoExt,
+    //     "file://" + RNFS.DocumentDirectoryPath + "/data/skratt" + videoExt
+    //   ],
+    //   results => {
+    //     alert("Error: " + results);
+    //   },
+    //   (results, file) => {
+    //     alert("Success : " + results + " file: " + file);
+    //   }
+    // );
   };
 
   onProgress = data => {
@@ -190,7 +205,7 @@ export default class VideoPlayer extends Component {
             }}
             /* For ExoPlayer */
             /* source={{ uri: 'http://www.youtube.com/api/manifest/dash/id/bf5bb2419360daf1/source/youtube?as=fmp4_audio_clear,fmp4_sd_hd_clear&sparams=ip,ipbits,expire,source,id,as&ip=0.0.0.0&ipbits=0&expire=19000000000&signature=51AF5F39AB0CEC3E5497CD9C900EBFEAECCCB5C7.8506521BFC350652163895D4C26DEE124209AA9E&key=ik0', type: 'mpd' }} */
-            source={require(videoDir + "woman_walk" + videoExt)}
+            source={ {uri: this.state.source} }
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}
