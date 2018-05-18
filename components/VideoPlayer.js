@@ -27,7 +27,7 @@ export default class VideoPlayer extends Component {
     duration: 0.0,
     currentTime: 0.0,
     paused: true,
-    source: "videos/woman_walk.mp4" //"bundle-assets://videos/woman_walk.mp4" //require(videoDir + "woman_walk" + videoExt)
+    source:"woman_walk" //"bundle-assets://videos/woman_walk.mp4" // require(videoDir + "woman_walk" + videoExt)
   };
 
   video: Video;
@@ -41,7 +41,7 @@ export default class VideoPlayer extends Component {
           for (let file of files) {
             console.log(file.path);
             if(file.path === 'videos/skratt.mp4') {
-              this.setState({ source: file.path }); // "bundle-assets://" + 
+              // this.setState({ source: file.path }); // "bundle-assets://" + 
             }
           }
       })
@@ -205,7 +205,7 @@ export default class VideoPlayer extends Component {
             }}
             /* For ExoPlayer */
             /* source={{ uri: 'http://www.youtube.com/api/manifest/dash/id/bf5bb2419360daf1/source/youtube?as=fmp4_audio_clear,fmp4_sd_hd_clear&sparams=ip,ipbits,expire,source,id,as&ip=0.0.0.0&ipbits=0&expire=19000000000&signature=51AF5F39AB0CEC3E5497CD9C900EBFEAECCCB5C7.8506521BFC350652163895D4C26DEE124209AA9E&key=ik0', type: 'mpd' }} */
-            source={ {uri: this.state.source} }
+            source={ {uri: this.state.source, mainVer: 1, patchVer: 0} } //, network: false, asset: true
             style={styles.fullScreen}
             rate={this.state.rate}
             paused={this.state.paused}
