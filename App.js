@@ -29,11 +29,9 @@ export default class App extends Component<Props> {
           Welcome to React Native!
         </Text>
         <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
           {instructions}
         </Text>
+        <View style={styles.videoContainer}>
         <Video source={require('./data/woman_walk.mp4')}   // Can be a URL or a local file.
           poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
           ref={(ref) => {
@@ -57,6 +55,7 @@ export default class App extends Component<Props> {
           onBuffer={this.onBuffer}                // Callback when remote video is buffering
           onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
           style={styles.video} />
+          </View>
       </View>
     );
   }
@@ -78,6 +77,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  videoContainer: {
+    height: 400,
+    width: 400,
   },
   video: {
     position: 'absolute',
