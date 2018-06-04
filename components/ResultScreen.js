@@ -14,7 +14,7 @@ class ResultScreen extends React.Component {
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Result</Text>
         <View style={styles.videoContainer}>
-          <Video source={require('./data/woman_walk.mp4')}   // Can be a URL or a local file.
+          <Video source={require('../data/woman_walk.mp4')}   // Can be a URL or a local file.
             poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
             ref={(ref) => {
               this.player = ref
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = ResultScreen;
+export default ResultScreen;

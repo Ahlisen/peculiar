@@ -25,4 +25,4 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-module.exports = InstructionsScreen;
+export default InstructionsScreen;

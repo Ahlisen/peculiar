@@ -13,7 +13,7 @@ class StartScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.title} >Pictogram</Text>
-        <Image source={require('./images/placeholder.png')} />
+        <Image source={require('../images/placeholder.png')} />
         <Button
           title="Go to Home"
           onPress={() => this.props.navigation.replace('Home')}
@@ -36,4 +36,4 @@ const styles = StyleSheet.create({
   }
 });
 
-module.exports = StartScreen;
+export default StartScreen;

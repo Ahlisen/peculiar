@@ -3,7 +3,6 @@
 import React, { Component } from "react";
 
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,10 +17,6 @@ import { unzip, subscribe } from 'react-native-zip-archive'
 
 const videoDir = "videos/";
 const videoExt = ".mp4";
-const dirHome = Platform.select({
-  ios: `${RNFS.DocumentDirectoryPath}`,
-  android: `${RNFS.ExternalStorageDirectoryPath}`
-});
 
 let videos = [];
 
@@ -43,8 +38,6 @@ export default class VideoPlayer extends Component {
     this.setState({ paused: !this.state.paused });
 
     if (!this.state.paused) {
-      console.log("GOT dirHome:", dirHome);
-
       RNFS.readDir(RNFS.ExternalStorageDirectoryPath + "/Android/obb/com.peculiar")
         .then((result) => {
           console.log('GOT RESULT:', result);
@@ -321,5 +314,3 @@ const styles = StyleSheet.create({
     lineHeight: 12
   }
 });
-
-AppRegistry.registerComponent("VideoPlayer", () => VideoPlayer);

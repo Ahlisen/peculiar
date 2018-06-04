@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import VideoPlayer from './components/VideoPlayer';
 import {
   createStackNavigator,
 } from 'react-navigation'
@@ -11,16 +10,17 @@ import {
   Button
 } from 'react-native';
 
-import StartScreen from './StartScreen';
-import HomeScreen from './HomeScreen';
-import ResultScreen from './ResultScreen';
-import InstructionsScreen from './InstructionsScreen';
+import StartScreen from './components/StartScreen';
+import HomeScreen from './components/HomeScreen';
+import ResultScreen from './components/ResultScreen';
+import InstructionsScreen from './components/InstructionsScreen';
+import VideoPlayer from './components/VideoPlayer';
 
 const RootStack = createStackNavigator(
   {
     Start: StartScreen,
     Home: HomeScreen,
-    Result: ResultScreen,
+    Result: VideoPlayer,//ResultScreen,
     Instructions: InstructionsScreen,
   },
   {
