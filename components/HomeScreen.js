@@ -4,8 +4,13 @@ import {
   StyleSheet,
   Text,
   View,
-  Button
+  Button,
+  FlatList,
+  Image
 } from 'react-native';
+
+const thumbnails = [{key: 'a'}, {key: 'b'}];
+
 
 class HomeScreen extends React.Component {
   render() {
@@ -19,6 +24,12 @@ class HomeScreen extends React.Component {
         <Button
           title="Render"
           onPress={() => this.props.navigation.navigate('Result')}
+        />
+        <Image source={{uri: 'check'}} style={{width: 42, height: 42}} />
+        <FlatList
+          horizontal
+          data={thumbnails}
+          renderItem={({item}) => <Text>{item.key}</Text>}
         />
       </View>
     );
