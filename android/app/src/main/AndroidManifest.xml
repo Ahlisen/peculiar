@@ -32,10 +32,8 @@
 			android:label="@string/app_name"
 			android:windowSoftInputMode="adjustResize">
 		</activity>
-
 		<activity android:name=".BootActivity">
 		</activity>
-
 		<activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
 
 		<service android:name=".expansion.ExpansionDownloaderService"/>
@@ -45,7 +43,7 @@
 		<activity-alias
 			android:name=".LaunchActivity"
 			android:label="@string/app_name"
-			android:targetActivity=".MainActivity">
+			android:targetActivity=".BootActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
