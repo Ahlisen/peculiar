@@ -17,7 +17,9 @@ import RNFS from "react-native-fs";
 import Share from "react-native-share"
 import { unzip, subscribe } from 'react-native-zip-archive'
 
-const videoDir = "videos/";
+const videoDir = RNFS.DocumentDirectoryPath + "/videos/";
+const iconDir = RNFS.DocumentDirectoryPath + "/icons/";
+const pictogramDir = RNFS.DocumentDirectoryPath + "/pictograms/"
 const videoExt = ".mp4";
 
 let videos = [];
@@ -50,10 +52,30 @@ export default class VideoPlayer extends Component {
     duration: 0.0,
     currentTime: 0.0,
     paused: true,
-    source: { uri: videoDir+"woman_walk", mainVer: 1, patchVer: 0 }
+    source: { uri: videoDir+"woman_walk"+videoExt, isAsset: false }
   };
 
   video: Video;
+
+  moveToPictogramDir(file) {
+    console.log("GOT RESULT Success: " + "file: " + file);
+    const movedFile = pictogramDir+"1.mp4";
+    RNFS.moveFile(file, movedFile)
+      .then(() => {
+        this.setState({ source: { uri: movedFile } });
+  
+        const sharePath = "file://"+movedFile;
+        console.log("Sharing", sharePath);
+        Share.open({
+          title: 'Share your amazing Pictogram!',
+          message: 'Wow! Look at this! An amazing Pictogram!',
+          url: sharePath
+        })
+        .then(sharedResult => {
+          console.log("GOT RESULT shared:", sharedResult);
+        }).catch(err => { console.log("Share error:", err); });
+      })
+  }
 
   togglePlay = () => {
     this.setState({ paused: !this.state.paused });
@@ -81,42 +103,27 @@ export default class VideoPlayer extends Component {
 
           RNVideoEditor.merge(
             [
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "skratt" + videoExt,
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "skratt" + videoExt,
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
+              videoDir + "skratt" + videoExt,
+              videoDir + "woman_walk" + videoExt,
+              videoDir + "skratt" + videoExt,
+              videoDir + "woman_walk" + videoExt,
+              videoDir + "woman_walk" + videoExt,
+              videoDir + "woman_walk" + videoExt,
             ],
             results => {
               alert("Error: " + results);
             },
             (results, file) => {
-              console.log("GOT RESULT Success: " + results + " file: " + file);
-              this.setState({ source: { uri: file } });
-
-              // const sharePath = "file://"+file;
-              // console.log("Sharing", sharePath);
-              // Share.open({
-              //   title: 'Share your amazing Pictogram!',
-              //   message: 'Wow! Look at this! An amazing Pictogram!',
-              //   url: sharePath
-              // })
-              // .then(sharedResult => {
-              //   console.log("GOT RESULT shared:", sharedResult);
-              // }).catch(err => { console.log("Share error:", err); });
-
-              RNFS.readFile("file://"+file, 'base64')
-                .then(pictogram => {
-                  console.log("Sharing", pictogram);
-                  Share.open({
-                    title: 'Share your amazing Pictogram!',
-                    message: 'Wow! Look at this! An amazing Pictogram!',
-                    url: "data:video/mp4;base64,"+pictogram
-                  })
-                  .then(sharedResult => {
-                    console.log("GOT RESULT shared:", sharedResult);
-                  }).catch(err => { console.log("Share error:", err); });
+              RNFS.exists(pictogramDir)
+                .then(pictogramDirExists => {
+                  if (!pictogramDirExists) {
+                    RNFS.mkdir(pictogramDir)
+                      .then(() => {
+                        this.moveToPictogramDir(file);
+                      })
+                  } else {
+                    this.moveToPictogramDir(file);
+                  }
                 });
             }
           );
