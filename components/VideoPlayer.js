@@ -7,18 +7,39 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform
+  Platform,
+  PermissionsAndroid
 } from "react-native";
 
 import Video from "react-native-video";
 import RNVideoEditor from "react-native-video-editor";
 import RNFS from "react-native-fs";
+import Share from "react-native-share"
 import { unzip, subscribe } from 'react-native-zip-archive'
 
 const videoDir = "videos/";
 const videoExt = ".mp4";
 
 let videos = [];
+
+async function requestReadWriteStoragePermission() {
+  try {
+    const granted = await PermissionsAndroid.requestMultiple(
+      [PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE]
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("You can use the file system")
+      return true
+    } else {
+      console.log("Read external storage permission denied")
+      return false
+    }
+  } catch (err) {
+    console.warn(err)
+    return false
+  }
+}
 
 export default class VideoPlayer extends Component {
   state = {
@@ -36,6 +57,10 @@ export default class VideoPlayer extends Component {
 
   togglePlay = () => {
     this.setState({ paused: !this.state.paused });
+    
+    if (requestReadWriteStoragePermission() === false) {
+      return;
+    }
 
     if (!this.state.paused) {
       RNFS.readDir(RNFS.ExternalStorageDirectoryPath + "/Android/obb/com.peculiar")
@@ -56,15 +81,43 @@ export default class VideoPlayer extends Component {
 
           RNVideoEditor.merge(
             [
+              RNFS.DocumentDirectoryPath + "/" + videoDir + "skratt" + videoExt,
               RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "skratt" + videoExt
+              RNFS.DocumentDirectoryPath + "/" + videoDir + "skratt" + videoExt,
+              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
+              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
+              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
             ],
             results => {
               alert("Error: " + results);
             },
             (results, file) => {
-              alert("Success : " + results + " file: " + file);
+              console.log("GOT RESULT Success: " + results + " file: " + file);
               this.setState({ source: { uri: file } });
+
+              // const sharePath = "file://"+file;
+              // console.log("Sharing", sharePath);
+              // Share.open({
+              //   title: 'Share your amazing Pictogram!',
+              //   message: 'Wow! Look at this! An amazing Pictogram!',
+              //   url: sharePath
+              // })
+              // .then(sharedResult => {
+              //   console.log("GOT RESULT shared:", sharedResult);
+              // }).catch(err => { console.log("Share error:", err); });
+
+              RNFS.readFile("file://"+file, 'base64')
+                .then(pictogram => {
+                  console.log("Sharing", pictogram);
+                  Share.open({
+                    title: 'Share your amazing Pictogram!',
+                    message: 'Wow! Look at this! An amazing Pictogram!',
+                    url: "data:video/mp4;base64,"+pictogram
+                  })
+                  .then(sharedResult => {
+                    console.log("GOT RESULT shared:", sharedResult);
+                  }).catch(err => { console.log("Share error:", err); });
+                });
             }
           );
         })
