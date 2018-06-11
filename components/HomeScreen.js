@@ -7,6 +7,26 @@ import {
   Button
 } from 'react-native';
 
+import RNFS from "react-native-fs";
+import RNVideoEditor from "react-native-video-editor";
+
+import Directory from '../constants/Directory';
+
+const videoExt = ".mp4";
+
+function moveToPictogramDir(file) {
+  return new Promise((resolve, reject) => {
+    const movedFile = Directory.PICTOGRAM+"1.mp4";
+    RNFS.moveFile(file, movedFile)
+      .then(() => {
+        resolve()
+      })
+      .catch(() =>{
+        reject()
+      })
+  });
+}
+
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -18,7 +38,39 @@ class HomeScreen extends React.Component {
         />
         <Button
           title="Render"
-          onPress={() => this.props.navigation.navigate('Result')}
+          onPress={() => {
+            RNVideoEditor.merge(
+              [
+                Directory.VIDEO + "skratt" + videoExt,
+                Directory.VIDEO + "woman_walk" + videoExt,
+                Directory.VIDEO + "skratt" + videoExt,
+                Directory.VIDEO + "woman_walk" + videoExt,
+                Directory.VIDEO + "woman_walk" + videoExt
+              ],
+              results => {
+                alert("Error: " + results);
+              },
+              (results, file) => {
+                RNFS.exists(Directory.PICTOGRAM)
+                  .then(pictogramDirExists => {
+                    if (!pictogramDirExists) {
+                      RNFS.mkdir(Directory.PICTOGRAM)
+                        .then(() => {
+                          moveToPictogramDir(file)
+                            .then(() => {
+                              this.props.navigation.navigate('Result');
+                            })
+                        })
+                    } else {
+                      moveToPictogramDir(file)
+                        .then(() => {
+                          this.props.navigation.navigate('Result');
+                        })
+                    }
+                  });
+              }
+            );
+          }}
         />
       </View>
     );

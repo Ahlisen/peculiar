@@ -7,41 +7,19 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform,
-  PermissionsAndroid
+  Platform
 } from "react-native";
 
 import Video from "react-native-video";
-import RNVideoEditor from "react-native-video-editor";
 import RNFS from "react-native-fs";
-import Share from "react-native-share"
-import { unzip, subscribe } from 'react-native-zip-archive'
+import Share from "react-native-share";
 
-const videoDir = RNFS.DocumentDirectoryPath + "/videos/";
-const iconDir = RNFS.DocumentDirectoryPath + "/icons/";
-const pictogramDir = RNFS.DocumentDirectoryPath + "/pictograms/"
+import Directory from '../constants/Directory';
+
+const videoDir = Directory.VIDEO;
+const iconDir = Directory.ICON;
+const pictogramDir = Directory.PICTOGRAM;
 const videoExt = ".mp4";
-
-let videos = [];
-
-async function requestReadWriteStoragePermission() {
-  try {
-    const granted = await PermissionsAndroid.requestMultiple(
-      [PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE]
-    )
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("You can use the file system")
-      return true
-    } else {
-      console.log("Read external storage permission denied")
-      return false
-    }
-  } catch (err) {
-    console.warn(err)
-    return false
-  }
-}
 
 export default class VideoPlayer extends Component {
   state = {
@@ -52,85 +30,28 @@ export default class VideoPlayer extends Component {
     duration: 0.0,
     currentTime: 0.0,
     paused: true,
-    source: { uri: videoDir+"woman_walk"+videoExt, isAsset: false }
+    source: { uri: pictogramDir+"1"+videoExt, isAsset: false }
   };
 
   video: Video;
 
-  moveToPictogramDir(file) {
-    console.log("GOT RESULT Success: " + "file: " + file);
-    const movedFile = pictogramDir+"1.mp4";
-    RNFS.moveFile(file, movedFile)
-      .then(() => {
-        this.setState({ source: { uri: movedFile } });
-  
-        const sharePath = "file://"+movedFile;
-        console.log("Sharing", sharePath);
-        Share.open({
-          title: 'Share your amazing Pictogram!',
-          message: 'Wow! Look at this! An amazing Pictogram!',
-          url: sharePath
-        })
-        .then(sharedResult => {
-          console.log("GOT RESULT shared:", sharedResult);
-        }).catch(err => { console.log("Share error:", err); });
-      })
-  }
-
   togglePlay = () => {
     this.setState({ paused: !this.state.paused });
-    
-    if (requestReadWriteStoragePermission() === false) {
-      return;
-    }
 
     if (!this.state.paused) {
-      RNFS.readDir(RNFS.ExternalStorageDirectoryPath + "/Android/obb/com.peculiar")
-        .then((result) => {
-          console.log('GOT RESULT:', result);
-          return unzip(result[0].path, RNFS.DocumentDirectoryPath);
-        })
-        .then((path) => {
-          console.log(`GOT RESULT: unzip completed at ${path}`)
-          return RNFS.readDir(path + "/videos");
-        })
-        .then(dir => {
-          console.log('GOT RESULT dir:', dir);
-          dir.forEach(video => {
-            videos.push(video.name);
-          });
-          console.log('GOT RESULT videos:', videos);
-
-          RNVideoEditor.merge(
-            [
-              videoDir + "skratt" + videoExt,
-              videoDir + "woman_walk" + videoExt,
-              videoDir + "skratt" + videoExt,
-              videoDir + "woman_walk" + videoExt,
-              videoDir + "woman_walk" + videoExt,
-              videoDir + "woman_walk" + videoExt,
-            ],
-            results => {
-              alert("Error: " + results);
-            },
-            (results, file) => {
-              RNFS.exists(pictogramDir)
-                .then(pictogramDirExists => {
-                  if (!pictogramDirExists) {
-                    RNFS.mkdir(pictogramDir)
-                      .then(() => {
-                        this.moveToPictogramDir(file);
-                      })
-                  } else {
-                    this.moveToPictogramDir(file);
-                  }
-                });
-            }
-          );
-        })
-        .catch((err) => {
-          console.log("Got Error:", err.message, err.code);
-        });
+      const videoPath = pictogramDir+"1.mp4";
+      this.setState({ source: { uri: videoPath } });
+    
+      const sharePath = "file://"+videoPath;
+      console.log("Sharing", sharePath);
+      Share.open({
+        title: 'Share your amazing Pictogram!',
+        message: 'Wow! Look at this! An amazing Pictogram!',
+        url: sharePath
+      })
+      .then(sharedResult => {
+        console.log("GOT RESULT shared:", sharedResult);
+      }).catch(err => { console.log("Share error:", err); });
     }
   }
 
