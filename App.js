@@ -18,13 +18,32 @@ import VideoPlayer from './components/VideoPlayer';
 
 const RootStack = createStackNavigator(
   {
-    Start: StartScreen,
-    Home: HomeScreen,
-    Result: ResultScreen,
+    Start: {
+      screen: StartScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
+    Home: {
+      screen: HomeScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
+    Result: {
+      screen: ResultScreen,
+      navigationOptions: () => ({
+        title: `Result`,
+        headerBackTitle: `<--`,
+        headerTintColor: 'black'
+      })
+    },
     Instructions: InstructionsScreen
   },
   {
     initialRouteName: 'Start',
+    cardStyle: { backgroundColor: '#FFFFFF' },
+    headerMode: 'screen',
   }
 );
 

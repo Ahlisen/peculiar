@@ -71,7 +71,6 @@ class ResultScreen extends React.Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Result</Text>
         <View style={styles.videoContainer}>
           <TouchableOpacity onPress={this.togglePlay}
             style={styles.videoContainer}>

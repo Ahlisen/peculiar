@@ -93,7 +93,7 @@ class ProgressController extends Component {
                 <View style={{flex: 1, flexDirection: "row", top: moving ? radiusOfActiveHolder : radiusOfHolder}}>
                     <TouchableOpacity style={[styles.line, {flex: percent, borderColor: "black"}]}
                                         onPress={this.onLinePressed.bind(this)}/>
-                    <TouchableOpacity style={[styles.line, {flex: 100 - percent, borderColor: "white"}]}
+                    <TouchableOpacity style={[styles.line, {flex: 100 - percent, borderColor: "lightgrey"}]}
                                         onPress={this.onLinePressed.bind(this)}/>
                 </View>
                 <Animated.View style={this.getHolderStyle()}/>
