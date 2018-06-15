@@ -20,7 +20,7 @@ const RootStack = createStackNavigator(
   {
     Start: StartScreen,
     Home: HomeScreen,
-    Result: VideoPlayer,//ResultScreen,
+    Result: ResultScreen,
     Instructions: InstructionsScreen,
   },
   {

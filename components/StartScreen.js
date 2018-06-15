@@ -14,6 +14,7 @@ class StartScreen extends React.Component {
       <View style={styles.container}>
         <Text style={styles.title} >Pictogram</Text>
         <Image source={require('../images/placeholder.png')} />
+        <Image source={require('../images/placeholder2.png')} />
         <Button
           title="Go to Home"
           onPress={() => this.props.navigation.replace('Home')}

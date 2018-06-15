@@ -11,9 +11,19 @@ import {
   Dimensions
 } from 'react-native';
 
+import RNFS from "react-native-fs";
+
 const {width, height} = Dimensions.get('window');
 const columns = 5
+const rows = 4
 const itemWidth = width / columns;
+
+console.log(RNFS.MainBundlePath)
+    RNFS.readDir(RNFS.MainBundlePath+"/assets/images").then((data) => {
+      data.forEach(thing => {
+        console.log(thing.isDirectory(),thing.name)
+      })
+    })  
 
 class HomeScreen extends React.Component {
 
@@ -22,10 +32,10 @@ class HomeScreen extends React.Component {
 
     var thumbnails = [];
 
-    for (var i = 0; i < 100; i++) {
-      item = {key: String(i)}
+    Object.keys(images).forEach(key => {
+      item = {key: String(key), uri: images[key]}
       thumbnails.push(item)
-    }
+    });
 
     this.state = {
       output: [],
@@ -47,61 +57,50 @@ class HomeScreen extends React.Component {
     this.setState({ output })
   };
 
-  renderItem = ({item}) => {
+  renderOutput = ({item}) => {
     return (
       <View>
-        <Text>key: {item.key}</Text>
-        <Image style={{ height: itemWidth,  width : itemWidth}} source={require('../images/placeholder2.png')} resizeMode='cover' />
+        <Image style={styles.image} source={item.uri} resizeMode='cover' />
       </View>
     )
   };
 
-  renderInputItem = ({item}) => {
+  renderInput = ({item}) => {
     return (
       <TouchableHighlight onPress={() => this.addItem(item)}>
-        <Image style={{ height: itemWidth,  width : itemWidth}} source={require('../images/placeholder2.png')} resizeMode='cover' />
+        <Image style={styles.image} source={item.uri} resizeMode='cover' />
       </TouchableHighlight>
     )
   };
 
-  /*
-  *   loading assets in ios: { uri: 'check' }
-  *   require() loads noticably slower than {uri:_} in flatlist.
-  *   
-  */
-
   render() {
     return (
       <View style={styles.container}>
-
         <View style={styles.output}>
           <FlatList 
             extraData={this.state}
             numColumns={columns}
             data={this.state.output}
-            renderItem={this.renderItem}
+            renderItem={this.renderOutput}
           />
           <TouchableHighlight style={styles.bottomRight} onPress={() => this.props.navigation.navigate('Result')}>
-            <Image style={{ height: itemWidth,  width : itemWidth}} source={require('../images/render.png')} resizeMode='cover' />
+            <Image style={styles.image} source={require('../images/render.png')} resizeMode='cover' />
           </TouchableHighlight>
         </View>
         <View style={styles.input}>
-          <FlatList 
-            // horizontal
+          <FlatList
             numColumns={columns}
             data={this.state.thumbnails}
-            renderItem={this.renderInputItem}
+            renderItem={this.renderInput}
           />
           <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
-            <Image style={{ height: itemWidth,  width : itemWidth}} source={require('../images/remove.png')} resizeMode='cover' />
+            <Image style={styles.image} source={require('../images/remove.png')} resizeMode='cover' />
           </TouchableHighlight>
         </View>
       </View>
     );
   }
 }
-
-type Props = {};
 
 const styles = StyleSheet.create({
   container: {
@@ -112,16 +111,21 @@ const styles = StyleSheet.create({
   output: {
     position: 'relative',
     width: width,
-    height: itemWidth * 4
+    height: itemWidth * rows
   },
   input: {
     position: 'relative',
-    height: itemWidth * 4
+    width: width,
+    height: itemWidth * rows
   },
   bottomRight: {
     position: 'absolute',
     bottom: 0,
     right: 0
+  },
+  image: {
+  	height: itemWidth,
+  	width: itemWidth
   }
 });
 
