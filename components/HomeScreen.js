@@ -147,9 +147,14 @@ class HomeScreen extends React.Component {
             data={this.state.output}
             renderItem={this.renderOutput}
           />
-          <TouchableHighlight style={styles.bottomRight} onPress={() => this.merge(
-          	[Directory.VIDEO+"mis"+videoExt, Directory.VIDEO+"mis"+videoExt]
-          	)}>
+          <TouchableHighlight style={styles.bottomRight}
+          	onPress={
+          		() => this.merge(
+          			this.state.output.map((item) => {
+          				return Directory.VIDEO+item.key+videoExt 
+          			})
+          		)
+          	}>
             <Image style={styles.image} source={require('../gui/render.png')} resizeMode='cover' />
           </TouchableHighlight>
         </View>

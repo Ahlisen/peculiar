@@ -23,7 +23,7 @@ class ResultScreen extends React.Component {
     duration: 0.0,
     currentTime: 0.0,
     paused: true,
-    source: Directory.PICTOGRAM+"1.mp4"
+    source: Directory.PICTOGRAM+"pictogram.mp4"
   };
 
   share = () => {
@@ -56,6 +56,7 @@ class ResultScreen extends React.Component {
 
   onSeek = (newPercent, paused) => {
     this.player.seek(newPercent * this.state.duration);
+  }
 
   getCurrentTimePercentage(currentTime, duration) {
     if (currentTime > 0) {
