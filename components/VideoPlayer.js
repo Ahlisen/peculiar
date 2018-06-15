@@ -11,14 +11,15 @@ import {
 } from "react-native";
 
 import Video from "react-native-video";
-import RNVideoEditor from "react-native-video-editor";
 import RNFS from "react-native-fs";
-import { unzip, subscribe } from 'react-native-zip-archive'
+import Share from "react-native-share";
 
-const videoDir = "videos/";
+import Directory from '../constants/Directory';
+
+const videoDir = Directory.VIDEO;
+const iconDir = Directory.ICON;
+const pictogramDir = Directory.PICTOGRAM;
 const videoExt = ".mp4";
-
-let videos = [];
 
 export default class VideoPlayer extends Component {
   state = {
@@ -29,7 +30,7 @@ export default class VideoPlayer extends Component {
     duration: 0.0,
     currentTime: 0.0,
     paused: true,
-    source: { uri: videoDir+"woman_walk", mainVer: 1, patchVer: 0 }
+    source: { uri: pictogramDir+"1"+videoExt, isAsset: false }
   };
 
   video: Video;
@@ -38,39 +39,19 @@ export default class VideoPlayer extends Component {
     this.setState({ paused: !this.state.paused });
 
     if (!this.state.paused) {
-      RNFS.readDir(RNFS.ExternalStorageDirectoryPath + "/Android/obb/com.peculiar")
-        .then((result) => {
-          console.log('GOT RESULT:', result);
-          return unzip(result[0].path, RNFS.DocumentDirectoryPath);
-        })
-        .then((path) => {
-          console.log(`GOT RESULT: unzip completed at ${path}`)
-          return RNFS.readDir(path + "/videos");
-        })
-        .then(dir => {
-          console.log('GOT RESULT dir:', dir);
-          dir.forEach(video => {
-            videos.push(video.name);
-          });
-          console.log('GOT RESULT videos:', videos);
-
-          RNVideoEditor.merge(
-            [
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "woman_walk" + videoExt,
-              RNFS.DocumentDirectoryPath + "/" + videoDir + "skratt" + videoExt
-            ],
-            results => {
-              alert("Error: " + results);
-            },
-            (results, file) => {
-              alert("Success : " + results + " file: " + file);
-              this.setState({ source: { uri: file } });
-            }
-          );
-        })
-        .catch((err) => {
-          console.log("Got Error:", err.message, err.code);
-        });
+      const videoPath = pictogramDir+"1.mp4";
+      this.setState({ source: { uri: videoPath } });
+    
+      const sharePath = "file://"+videoPath;
+      console.log("Sharing", sharePath);
+      Share.open({
+        title: 'Share your amazing Pictogram!',
+        message: 'Wow! Look at this! An amazing Pictogram!',
+        url: sharePath
+      })
+      .then(sharedResult => {
+        console.log("GOT RESULT shared:", sharedResult);
+      }).catch(err => { console.log("Share error:", err); });
     }
   }
 

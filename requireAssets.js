@@ -1,5 +1,5 @@
 const fs = require('fs');
-const images = './images/';
+const icons = './icons/';
 const videos = './videos/';
 
 function inject(injection) {
@@ -27,8 +27,8 @@ function dic(folder, dictionaryName) {
 	});
 }
 
-dic(images, "images").then((images) => {
+dic(icons, "icons").then((icons) => {
 	dic(videos, "videos").then((videos) => {
-		inject(images+"\n"+videos)
+		inject(icons+"\n"+videos)
 	})
 });

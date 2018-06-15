@@ -21,7 +21,7 @@ const RootStack = createStackNavigator(
     Start: StartScreen,
     Home: HomeScreen,
     Result: ResultScreen,
-    Instructions: InstructionsScreen,
+    Instructions: InstructionsScreen
   },
   {
     initialRouteName: 'Start',

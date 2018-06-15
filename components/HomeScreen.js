@@ -12,18 +12,39 @@ import {
 } from 'react-native';
 
 import RNFS from "react-native-fs";
+import RNVideoEditor from "react-native-video-editor";
+
+import Directory from '../constants/Directory';
 
 const {width, height} = Dimensions.get('window');
 const columns = 5
 const rows = 4
 const itemWidth = width / columns;
+const videoExt = ".mp4";
+const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 
-console.log(RNFS.MainBundlePath)
-    RNFS.readDir(RNFS.MainBundlePath+"/assets/images").then((data) => {
-      data.forEach(thing => {
-        console.log(thing.isDirectory(),thing.name)
+// RNFS.readDir(path + "/videos")
+//     .then(dir => {
+//       console.log('GOT RESULT dir:', dir);
+//       videos = [];
+//       dir.forEach(video => {
+//         videos.push(video.name);
+//       });
+//       console.log('GOT RESULT videos:', videos);
+//     })
+
+function moveToPictogramDir(file) {
+  return new Promise((resolve, reject) => {
+    
+    RNFS.moveFile(file, savedFilePath)
+      .then(() => {
+        resolve()
       })
-    })  
+      .catch((error) =>{
+        reject(error)
+      })
+  });
+}
 
 class HomeScreen extends React.Component {
 
@@ -32,8 +53,12 @@ class HomeScreen extends React.Component {
 
     var thumbnails = [];
 
-    Object.keys(images).forEach(key => {
-      item = {key: String(key), uri: images[key]}
+    RNFS.readDir(RNFS.DocumentDirectoryPath).then((data) => {
+    	console.log(data)
+    })
+
+    Object.keys(icons).forEach(key => {
+      item = {key: String(key), uri: icons[key]}
       thumbnails.push(item)
     });
 
@@ -42,6 +67,45 @@ class HomeScreen extends React.Component {
       thumbnails: thumbnails
     };
   }
+
+  merge = (inputArray) => {
+		RNVideoEditor.merge(inputArray,
+		  results => {
+		    console.log("Error: ", results);
+		  },
+		  (results, file) => {
+		  	console.log("Got merged file:", file);
+		    RNFS.exists(Directory.PICTOGRAM)
+		      .then(pictogramDirExists => {
+		        if (!pictogramDirExists) {
+		          RNFS.mkdir(Directory.PICTOGRAM)
+		            .then(() => {
+		              moveToPictogramDir(file)
+		                .then(() => {
+		                  this.props.navigation.navigate('Result');
+		                })
+		            })
+		        } else {
+		          moveToPictogramDir(file)
+		            .then(() => {
+		              this.props.navigation.navigate('Result');
+		            }).catch((error) => {
+		            	console.log("Could not move to pictogram directory: ", error);
+		            	RNFS.unlink(savedFilePath).then(() => {
+		            		moveToPictogramDir(file).then(() => {
+		            			console.log("Great success");
+		            			this.props.navigation.navigate('Result');
+		            		})
+		            	})
+		            })
+		        }
+		      })
+		      .catch((error) => {
+          	console.log("Pictogram dir exist check error: ", error);
+          });
+			 }
+		);
+	}
 
   addItem = (item) => {
     output = this.state.output
@@ -83,8 +147,10 @@ class HomeScreen extends React.Component {
             data={this.state.output}
             renderItem={this.renderOutput}
           />
-          <TouchableHighlight style={styles.bottomRight} onPress={() => this.props.navigation.navigate('Result')}>
-            <Image style={styles.image} source={require('../images/render.png')} resizeMode='cover' />
+          <TouchableHighlight style={styles.bottomRight} onPress={() => this.merge(
+          	[Directory.VIDEO+"mis"+videoExt, Directory.VIDEO+"mis"+videoExt]
+          	)}>
+            <Image style={styles.image} source={require('../gui/render.png')} resizeMode='cover' />
           </TouchableHighlight>
         </View>
         <View style={styles.input}>
@@ -94,7 +160,7 @@ class HomeScreen extends React.Component {
             renderItem={this.renderInput}
           />
           <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
-            <Image style={styles.image} source={require('../images/remove.png')} resizeMode='cover' />
+            <Image style={styles.image} source={require('../gui/remove.png')} resizeMode='cover' />
           </TouchableHighlight>
         </View>
       </View>
