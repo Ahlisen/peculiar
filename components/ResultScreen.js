@@ -23,7 +23,7 @@ class ResultScreen extends React.Component {
     duration: 0.0,
     currentTime: 0.0,
     paused: true,
-    source: Directory.PICTOGRAM+"1.mp4"
+    source: Directory.PICTOGRAM+"pictogram.mp4"
   };
 
   share = () => {
@@ -56,6 +56,7 @@ class ResultScreen extends React.Component {
 
   onSeek = (newPercent, paused) => {
     this.player.seek(newPercent * this.state.duration);
+  }
 
   getCurrentTimePercentage(currentTime, duration) {
     if (currentTime > 0) {
@@ -70,12 +71,10 @@ class ResultScreen extends React.Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Result</Text>
         <View style={styles.videoContainer}>
           <TouchableOpacity onPress={this.togglePlay}
             style={styles.videoContainer}>
             <Video source={{ uri: this.state.source }}   // Can be a URL or a local file.
-              // poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
               ref={(ref) => {
                 this.player = ref
               }}                                      // Store reference
@@ -100,7 +99,7 @@ class ResultScreen extends React.Component {
               { 
                 this.state.paused && 
                 <Image style={styles.videoIcon}
-                  source={require("../images/play.png")}/>
+                  source={require("../gui/play.png")}/>
               }
             </TouchableOpacity>
         </View>
@@ -112,7 +111,7 @@ class ResultScreen extends React.Component {
         </View>
         <TouchableOpacity onPress={this.share}>
           <Image style={styles.shareIcon}
-            source={require("../images/share.png")} />
+            source={require("../gui/share.png")} />
         </TouchableOpacity>
       </View>
     );

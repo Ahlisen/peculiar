@@ -4,14 +4,14 @@ import RNFS from "react-native-fs";
 export default class Directory {
     static get VIDEO() {
         return Platform.select({
-            ios: () => RNFS.DocumentDirectoryPath + "/videos/",
+            ios: () => RNFS.MainBundlePath+"/assets/videos/",
             android: () => RNFS.DocumentDirectoryPath + "/videos/"
         })();
     }
 
     static get ICON() {
         return Platform.select({
-            ios: () => RNFS.DocumentDirectoryPath + "/icons/",
+            ios: () => RNFS.MainBundlePath+"/assets/icons/",
             android: () => RNFS.DocumentDirectoryPath + "/icons/"
         })();
     }

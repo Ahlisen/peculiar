@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
+  TouchableHighlight,
   Image,
   PermissionsAndroid
 } from 'react-native';
@@ -98,13 +98,10 @@ class StartScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title} >Pictogram</Text>
-        <Image source={require('../images/placeholder.png')} />
-        <Button
-          title="Go to Home"
-          onPress={() => this.props.navigation.replace('Home')}
-          disabled={this.state.buttonDisabled}
-        />
+        <Text style={styles.title} >PICTOGRAM</Text>
+        <TouchableHighlight onPress={() => this.props.navigation.replace('Home')}>
+          <Image source={require('../gui/splash.png')} />
+        </TouchableHighlight>
       </View>
     );
   }
@@ -114,12 +111,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'space-evenly'
   },
   title: {
-    color: 'grey',
+    color: 'black',
     fontWeight: 'bold',
-    fontSize: 72,
+    fontSize: 42,
   }
 });
 
