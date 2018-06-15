@@ -6,6 +6,9 @@ import com.facebook.react.ReactApplication;
 import com.rnziparchive.RNZipArchivePackage;
 import com.reactlibrary.RNVideoEditorPackage;
 import com.brentvatne.react.ReactVideoPackage;
+import cl.json.RNSharePackage;
+import cl.json.ShareApplication;
+
 import com.rnfs.RNFSPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -15,7 +18,7 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends Application implements ReactApplication, ShareApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -28,9 +31,10 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.asList(
             new MainReactPackage(),
             new RNZipArchivePackage(),
-            new RNFSPackage(),
+            new RNVideoEditorPackage(),
             new ReactVideoPackage(),
-            new RNVideoEditorPackage()
+            new RNSharePackage(),
+            new RNFSPackage()
       );
     }
 
@@ -49,5 +53,10 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+  }
+
+  @Override
+  public String getFileProviderAuthority() {
+    return getPackageName() + ".fileprovider";
   }
 }

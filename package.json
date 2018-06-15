@@ -10,6 +10,7 @@
     "react": "16.3.0-alpha.1",
     "react-native": "0.54.2",
     "react-native-fs": "^2.9.12",
+    "react-native-share": "^1.0.27",
     "react-native-video": "^2.0.0",
     "react-native-video-editor": "^0.1.1",
     "react-native-zip-archive": "^2.2.5",
