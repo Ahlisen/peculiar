@@ -49,16 +49,7 @@ function unzipExpansionFiles() {
       return unzip(result[0].path, RNFS.DocumentDirectoryPath);
     })
     .then((path) => {
-      console.log(`GOT RESULT: unzip completed at ${path}`)
-      return RNFS.readDir(path + "/videos");
-    })
-    .then(dir => {
-      console.log('GOT RESULT dir:', dir);
-      videos = [];
-      dir.forEach(video => {
-        videos.push(video.name);
-      });
-      console.log('GOT RESULT videos:', videos);
+      console.log(`GOT RESULT: unzip completed at ${path}`);
       return Promise.resolve();
     })
     .catch((err) => {
@@ -71,34 +62,37 @@ class StartScreen extends React.Component {
 
   constructor() {
     super();
+    
+    if (Platform.OS === 'android') {
+      this.state = { buttonDisabled: true };
 
-    // TODO: Only do this for Android
-    this.state = {buttonDisabled: true};
+      (async () => {
+        if (await requestReadWriteStoragePermission() === false) {
+          // TODO: Show request-permission-button
+          return;
+        }
 
-    (async () => {
-      if (await requestReadWriteStoragePermission() === false) {
-        // TODO: Show request-permission-button
-        return;
-      }
-
-      RNFS.exists(Directory.VIDEO)
-        .then(videosExist => {
-          if (!videosExist) {
-            unzipExpansionFiles()
-              .then(() => {
-                this.setState({ buttonDisabled: false });
-                console.log("Unzipped & Button enabled!");
-              })
-              .catch(() => {
-                // TODO: Retry unzip
-                this.setState({ buttonDisabled: true });
-              });
-          } else {
-            this.setState({ buttonDisabled: false});
-            console.log("Button enabled!");
-          }
-        });
-    })();
+        RNFS.exists(Directory.VIDEO)
+          .then(videosExist => {
+            if (!videosExist) {
+              unzipExpansionFiles()
+                .then(() => {
+                  this.setState({ buttonDisabled: false });
+                  console.log("Unzipped & Button enabled!");
+                })
+                .catch(() => {
+                  // TODO: Retry unzip
+                  this.setState({ buttonDisabled: true });
+                });
+            } else {
+              this.setState({ buttonDisabled: false});
+              console.log("Button enabled!");
+            }
+          });
+      })();
+    } else {
+      this.state = { buttonDisabled: false };
+    }
   }
 
   render() {

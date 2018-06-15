@@ -14,6 +14,16 @@ import Directory from '../constants/Directory';
 
 const videoExt = ".mp4";
 
+// RNFS.readDir(path + "/videos")
+//     .then(dir => {
+//       console.log('GOT RESULT dir:', dir);
+//       videos = [];
+//       dir.forEach(video => {
+//         videos.push(video.name);
+//       });
+//       console.log('GOT RESULT videos:', videos);
+//     })
+
 function moveToPictogramDir(file) {
   return new Promise((resolve, reject) => {
     const movedFile = Directory.PICTOGRAM+"1.mp4";
