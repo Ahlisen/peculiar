@@ -99,7 +99,7 @@ android {
 	buildToolsVersion '27.0.3'
 
 	defaultConfig {
-		applicationId "com.peculiar"
+		applicationId "se.peculiar"
 		minSdkVersion 19
 		targetSdkVersion 27
 		versionCode 1

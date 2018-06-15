@@ -1,4 +1,4 @@
-package com.peculiar
+package se.peculiar
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -29,7 +29,8 @@ class BootActivity : AppCompatActivity(), IDownloaderClient {
 	private var mState: Int = 0
 	private var mCancelValidation: Boolean = false
 
-	private val expansionFileSize = if (BuildConfig.DEBUG) 505645L else 9000L
+	// TODO -> ALWAYS CHANGE THIS WHEN UPDATING APK EXPANSION FILE!!
+	private val expansionFileSize = if (BuildConfig.DEBUG) 835554L else 9000L
 	private val xAPKS = arrayOf(XAPKFile(
 			true, // true signifies a main file
 			1, // the version of the APK that the file was uploaded against

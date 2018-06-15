@@ -1,4 +1,4 @@
-package com.peculiar.expansion
+package se.peculiar.expansion
 
 import android.content.BroadcastReceiver
 import android.content.Context

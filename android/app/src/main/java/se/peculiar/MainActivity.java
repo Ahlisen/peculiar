@@ -1,4 +1,4 @@
-package com.peculiar;
+package se.peculiar;
 
 import com.facebook.react.ReactActivity;
 

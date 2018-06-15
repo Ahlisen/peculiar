@@ -43,7 +43,7 @@ async function requestReadWriteStoragePermission() {
 }
 
 function unzipExpansionFiles() {
-  return RNFS.readDir(RNFS.ExternalStorageDirectoryPath + "/Android/obb/com.peculiar")
+  return RNFS.readDir(RNFS.ExternalStorageDirectoryPath + "/Android/obb/se.peculiar")
     .then((result) => {
       console.log('GOT RESULT:', result);
       return unzip(result[0].path, RNFS.DocumentDirectoryPath);

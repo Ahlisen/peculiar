@@ -1,8 +1,9 @@
-package com.peculiar;
+package se.peculiar;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import se.peculiar.BuildConfig;
 import com.rnziparchive.RNZipArchivePackage;
 import com.reactlibrary.RNVideoEditorPackage;
 import com.brentvatne.react.ReactVideoPackage;

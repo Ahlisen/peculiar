@@ -1,4 +1,4 @@
-package com.peculiar.expansion
+package se.peculiar.expansion
 
 import se.peculiar.googleplaydownloaderlibrary.impl.DownloaderService
 import java.security.SecureRandom
