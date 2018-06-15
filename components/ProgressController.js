@@ -52,7 +52,7 @@ class ProgressController extends Component {
     notifyPercentChange(newPercent, paused) {
         let {onNewPercent} = this.props;
         if (onNewPercent instanceof Function) {
-            onNewPercent(newPercent, paused);
+            onNewPercent(newPercent/100, paused);
         }
     }
 

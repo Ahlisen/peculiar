@@ -55,8 +55,7 @@ class ResultScreen extends React.Component {
   };
 
   onSeek = (newPercent, paused) => {
-    this.player.seek(newPercent);
-  };
+    this.player.seek(newPercent * this.state.duration);
 
   getCurrentTimePercentage(currentTime, duration) {
     if (currentTime > 0) {
