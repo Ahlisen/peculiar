@@ -23,15 +23,10 @@ const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 
-// RNFS.readDir(path + "/videos")
-//     .then(dir => {
-//       console.log('GOT RESULT dir:', dir);
-//       videos = [];
-//       dir.forEach(video => {
-//         videos.push(video.name);
-//       });
-//       console.log('GOT RESULT videos:', videos);
-//     })
+var iconsDict = Platform.select({
+  ios: () => icons,
+  android: () => {}
+});
 
 function moveToPictogramDir(file) {
   return new Promise((resolve, reject) => {
@@ -53,14 +48,33 @@ class HomeScreen extends React.Component {
 
     var thumbnails = [];
 
-    RNFS.readDir(RNFS.DocumentDirectoryPath).then((data) => {
-    	console.log(data)
-    })
+    if (Platform.OS === 'android') {
+      RNFS.readDir(Directory.ICON)
+        .then(dir => {
+          console.log('GOT RESULT dir:', dir);
+          dir.forEach(icon => {
+            if (icon.name[0] != '.') {
+              const item = {
+                key: icon.name.slice(0,icon.name.length-4),
+                uri: "file://"+icon.path
+              };
+              thumbnails.push(item);
+            }
+          });
+          console.log('GOT RESULT thumbnails:', thumbnails);
 
-    Object.keys(icons).forEach(key => {
-      item = {key: String(key), uri: icons[key]}
-      thumbnails.push(item)
-    });
+          // state is set asynchronously
+          this.state = {
+            output: [],
+            thumbnails: thumbnails
+          };
+        })
+    } else {
+      Object.keys(icons).forEach(key => {
+        const item = {key: String(key), uri: icons[key]};
+        thumbnails.push(item);
+      });
+    }
 
     this.state = {
       output: [],
@@ -122,17 +136,29 @@ class HomeScreen extends React.Component {
   };
 
   renderOutput = ({item}) => {
+    let source = Platform.select({
+      ios: item.uri,
+      android: {uri: item.uri}
+    });
     return (
       <View>
-        <Image style={styles.image} source={item.uri} resizeMode='cover' />
+        <Image style={styles.image}
+        source={source}
+        resizeMode='cover' />
       </View>
     )
   };
 
   renderInput = ({item}) => {
+    let source = Platform.select({
+      ios: item.uri,
+      android: {uri: item.uri}
+    });
     return (
       <TouchableHighlight onPress={() => this.addItem(item)}>
-        <Image style={styles.image} source={item.uri} resizeMode='cover' />
+        <Image style={styles.image}
+        source={source}
+        resizeMode='cover' />
       </TouchableHighlight>
     )
   };
