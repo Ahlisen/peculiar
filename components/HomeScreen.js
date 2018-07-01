@@ -24,9 +24,6 @@ const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 
-var TextToVideo = NativeModules.TextToVideo;
-TextToVideo.generate('halloj');
-
 var iconsDict = Platform.select({
   ios: () => icons,
   android: () => {}
@@ -51,6 +48,15 @@ class HomeScreen extends React.Component {
     super(props);
 
     var thumbnails = [];
+
+    var TextToVideo = NativeModules.TextToVideo;
+		TextToVideo.generate('halloj', (error, events) => {
+			if (error) {
+				console.error(error);
+			} else {
+				console.log(events);
+			}
+		});
 
     if (Platform.OS === 'android') {
       RNFS.readDir(Directory.ICON)

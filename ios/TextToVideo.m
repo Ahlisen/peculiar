@@ -11,8 +11,10 @@
 @implementation TextToVideo
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(generate:(NSString *)text) {
+RCT_EXPORT_METHOD(generate:(NSString *)text:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"Recieving this: %@", text);
   NSLog(@"Recieving this: %@", text);
+  NSArray *events = @[@"foobar"];
+  callback(@[[NSNull null], events]);
 }
 @end
