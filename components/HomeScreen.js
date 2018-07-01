@@ -8,7 +8,8 @@ import {
   FlatList,
   Image,
   TouchableHighlight,
-  Dimensions
+  Dimensions,
+  NativeModules
 } from 'react-native';
 
 import RNFS from "react-native-fs";
@@ -22,6 +23,9 @@ const rows = 4
 const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
+
+var TextToVideo = NativeModules.TextToVideo;
+TextToVideo.generate('halloj');
 
 var iconsDict = Platform.select({
   ios: () => icons,
