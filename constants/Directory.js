@@ -22,4 +22,11 @@ export default class Directory {
             android: () => RNFS.DocumentDirectoryPath + "/pictograms/"
         })();
     }
+
+    static get TEXT() {
+        return Platform.select({
+            ios: () => RNFS.DocumentDirectoryPath + "/texts/",
+            android: () => RNFS.DocumentDirectoryPath + "/texts/"
+        })();
+    }
 }
