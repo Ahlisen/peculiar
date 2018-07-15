@@ -37,6 +37,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* peculiarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* peculiarTests.m */; };
 		3AFF82AB4D344B28A4D0BC75 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A7D3C2DDF1F14BA29EF42C8A /* libz.tbd */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		6105D98C20FBD5AE009C4DD9 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		61D14F1520E969BD00022D49 /* TextToVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D14F1420E969BD00022D49 /* TextToVideo.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		AAA5D22F29374DC98DC14107 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1F70E31B4CC5BC73585D /* libRNZipArchive.a */; };
@@ -1257,6 +1258,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6105D98C20FBD5AE009C4DD9 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
