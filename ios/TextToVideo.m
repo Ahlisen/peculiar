@@ -46,7 +46,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   // We chose to save in the tmp/ directory on the device initially
   NSString *directoryOut = @"Library/Caches/";
   NSString *outFile = [NSString stringWithFormat:@"%@%@", directoryOut, fileNameOut];
-  NSString *paths = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", outFile]];
+  NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", outFile]];
   NSURL *videoTempURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), fileNameOut]];
   
   // WARNING: AVAssetWriter does not overwrite files for us, so remove the destination file if it already exists

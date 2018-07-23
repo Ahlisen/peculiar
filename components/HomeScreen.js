@@ -97,7 +97,7 @@ class HomeScreen extends React.Component {
 
   merge = (inputArray) => {
     // console.log(inputArray.push(RNFS.CachesDirectoryPath+"/foo.mp4"));
-    inputArray.push(Directory.TEXT+"/real_2.mp4")
+    inputArray.push(Directory.TEXT+"/text_2.mp4")
 		RNVideoEditor.merge(inputArray,
 		  results => {
 		    console.log("Error: ", results);

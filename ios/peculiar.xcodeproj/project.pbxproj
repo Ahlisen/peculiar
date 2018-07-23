@@ -38,10 +38,8 @@
 		3AFF82AB4D344B28A4D0BC75 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A7D3C2DDF1F14BA29EF42C8A /* libz.tbd */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		6105D98C20FBD5AE009C4DD9 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
-		61643F842100F4CB00B5C31A /* song.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 61643F572100F4CB00B5C31A /* song.m4a */; };
 		61C598B621063B2C00E13354 /* shorter.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 61C5988921063B2B00E13354 /* shorter.m4a */; };
 		61D14F1520E969BD00022D49 /* TextToVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D14F1420E969BD00022D49 /* TextToVideo.m */; };
-		61F5EEE820FE6BAF0062F01A /* audio.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 61F5EEBB20FE6BAF0062F01A /* audio.m4a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		AAA5D22F29374DC98DC14107 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1F70E31B4CC5BC73585D /* libRNZipArchive.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -402,11 +400,9 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		47DD1F70E31B4CC5BC73585D /* libRNZipArchive.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNZipArchive.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
-		61643F572100F4CB00B5C31A /* song.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = song.m4a; sourceTree = "<group>"; };
 		61C5988921063B2B00E13354 /* shorter.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = shorter.m4a; sourceTree = "<group>"; };
 		61D14EE720E9695C00022D49 /* TextToVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextToVideo.h; sourceTree = "<group>"; };
 		61D14F1420E969BD00022D49 /* TextToVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextToVideo.m; sourceTree = "<group>"; };
-		61F5EEBB20FE6BAF0062F01A /* audio.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = audio.m4a; sourceTree = "<group>"; };
 		6764B45E70684BB3A2782D8F /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		8114F85D5E9A494FA00888CB /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
@@ -567,8 +563,6 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				61D14EE720E9695C00022D49 /* TextToVideo.h */,
 				61D14F1420E969BD00022D49 /* TextToVideo.m */,
-				61F5EEBB20FE6BAF0062F01A /* audio.m4a */,
-				61643F572100F4CB00B5C31A /* song.m4a */,
 				61C5988921063B2B00E13354 /* shorter.m4a */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -1271,8 +1265,6 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				61C598B621063B2C00E13354 /* shorter.m4a in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				61643F842100F4CB00B5C31A /* song.m4a in Resources */,
-				61F5EEE820FE6BAF0062F01A /* audio.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
