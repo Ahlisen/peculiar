@@ -25,7 +25,7 @@ export default class Directory {
 
     static get TEXT() {
         return Platform.select({
-            ios: () => RNFS.DocumentDirectoryPath + "/texts/",
+            ios: () => RNFS.CachesDirectoryPath,
             android: () => RNFS.DocumentDirectoryPath + "/texts/"
         })();
     }

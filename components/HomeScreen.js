@@ -50,11 +50,14 @@ class HomeScreen extends React.Component {
     var thumbnails = [];
 
     var TextToVideo = NativeModules.TextToVideo;
-		TextToVideo.generate('halloj', (error, events) => {
+		TextToVideo.generate('halloj på dig din jäkel', '2', (error, events) => {
 			if (error) {
 				console.error(error);
 			} else {
 				console.log(events);
+        RNFS.readDir(RNFS.CachesDirectoryPath).then((result) => {
+          console.log('GOT RESULT', result);
+        })
 			}
 		});
 
@@ -93,6 +96,8 @@ class HomeScreen extends React.Component {
   }
 
   merge = (inputArray) => {
+    // console.log(inputArray.push(RNFS.CachesDirectoryPath+"/foo.mp4"));
+    inputArray.push(Directory.TEXT+"/real_2.mp4")
 		RNVideoEditor.merge(inputArray,
 		  results => {
 		    console.log("Error: ", results);
@@ -138,6 +143,10 @@ class HomeScreen extends React.Component {
   };
 
   removeLastItem = () => {
+    RNFS.readDir(RNFS.CachesDirectoryPath).then((result) => {
+      console.log('GOT RESULT', result);
+    })
+
     output = this.state.output
     if (output.length > 0) {
       output.pop()
