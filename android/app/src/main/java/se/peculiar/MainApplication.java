@@ -3,7 +3,6 @@ package se.peculiar;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import se.peculiar.BuildConfig;
 import com.rnziparchive.RNZipArchivePackage;
 import com.reactlibrary.RNVideoEditorPackage;
 import com.brentvatne.react.ReactVideoPackage;
@@ -15,6 +14,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.ffmpegcommandline.FFMPEGCommandlinePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +35,8 @@ public class MainApplication extends Application implements ReactApplication, Sh
             new RNVideoEditorPackage(),
             new ReactVideoPackage(),
             new RNSharePackage(),
-            new RNFSPackage()
+            new RNFSPackage(),
+            new FFMPEGCommandlinePackage()
       );
     }
 

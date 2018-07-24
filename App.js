@@ -1,20 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   createStackNavigator,
 } from 'react-navigation'
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Button
-} from 'react-native';
 
 import StartScreen from './components/StartScreen';
 import HomeScreen from './components/HomeScreen';
 import ResultScreen from './components/ResultScreen';
 import InstructionsScreen from './components/InstructionsScreen';
-import VideoPlayer from './components/VideoPlayer';
 
 const RootStack = createStackNavigator(
   {

@@ -22,4 +22,11 @@ export default class Directory {
             android: () => RNFS.DocumentDirectoryPath + "/pictograms/"
         })();
     }
+
+    static get TEXTVIDEO() {
+        return Platform.select({
+            ios: () => RNFS.CachesDirectoryPath + "/text/",
+            android: () => RNFS.CachesDirectoryPath + "/text/"
+        })();
+    }
 }
