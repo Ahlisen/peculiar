@@ -21,7 +21,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
 + (UIImage *)imageFromString:(NSString *)input size:(CGSize)size {
   NSMutableParagraphStyle* style = [[NSMutableParagraphStyle alloc] init];
   [style setAlignment:NSTextAlignmentCenter];
-  NSDictionary *attributes = @{ NSForegroundColorAttributeName: UIColor.blackColor, NSFontAttributeName: [UIFont boldSystemFontOfSize:72], NSParagraphStyleAttributeName: style };
+  NSDictionary *attributes = @{ NSForegroundColorAttributeName: UIColor.blackColor, NSFontAttributeName: [UIFont boldSystemFontOfSize:96], NSParagraphStyleAttributeName: style };
   
   UIGraphicsBeginImageContext(size);
   CGContextRef context = UIGraphicsGetCurrentContext();
@@ -38,13 +38,12 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
 + (void)videoFromString:(NSString *)input size:(CGSize)size fileName:(NSString *)fileName callback:(RCTResponseSenderBlock)successCallback
 {
   // You can save a .mov or a .mp4 file
-  NSString *fileNameOut = [NSString stringWithFormat:@"temp_%@.mp4", fileName]; //@"temp.mp4";
+  NSString *fileNameOut = [NSString stringWithFormat:@"temp_%@.mp4", fileName];
   
   // We chose to save in the tmp/ directory on the device initially
   NSString *directoryOut = @"Library/Caches/";
   NSString *outFile = [NSString stringWithFormat:@"%@%@", directoryOut, fileNameOut];
   NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", outFile]];
-//  NSURL *videoTempURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), fileNameOut]];
   NSURL *videoTempURL = [NSURL fileURLWithPath:path];
 
   // WARNING: AVAssetWriter does not overwrite files for us, so remove the destination file if it already exists
@@ -53,8 +52,9 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   
   // Create your own array of UIImages
   NSMutableArray *images = [NSMutableArray array];
-  for (int i=0; i<5; i++) {
-    NSString *text = [NSString stringWithFormat:@"%@", input, i];
+  NSUInteger videoLength = ([input length] / 2) + 1;
+  for (int i=0; i<videoLength; i++) {
+    NSString *text = [NSString stringWithFormat:@"%@", input];
     UIImage *image = [self imageFromString:text size:size];
     [images addObject:image];
   }
