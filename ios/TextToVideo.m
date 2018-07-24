@@ -12,13 +12,10 @@
 RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSenderBlock)callback) {
-  RCTLogInfo(@"Recieving this: %@", text);
-  NSLog(@"Recieving this: %@", text);
+  RCTLogInfo(@"Recieving: %@", text);
+  NSLog(@"Recieving: %@", text);
   
-  NSString *finalPath = [TextToVideo videoFromString:text size:CGSizeMake(768.0, 768.0) fileName:index];
-  
-  NSArray *events = @[finalPath];
-  callback(@[[NSNull null], events]);
+  [TextToVideo videoFromString:text size:CGSizeMake(768.0, 768.0) fileName:index callback:callback];
 }
 
 + (UIImage *)imageFromString:(NSString *)input size:(CGSize)size {
@@ -38,7 +35,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   return image;
 }
 
-+ (NSString*)videoFromString:(NSString *)input size:(CGSize)size fileName:(NSString *)fileName
++ (void)videoFromString:(NSString *)input size:(CGSize)size fileName:(NSString *)fileName callback:(RCTResponseSenderBlock)successCallback
 {
   // You can save a .mov or a .mp4 file
   NSString *fileNameOut = [NSString stringWithFormat:@"temp_%@.mp4", fileName]; //@"temp.mp4";
@@ -47,8 +44,9 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   NSString *directoryOut = @"Library/Caches/";
   NSString *outFile = [NSString stringWithFormat:@"%@%@", directoryOut, fileNameOut];
   NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", outFile]];
-  NSURL *videoTempURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), fileNameOut]];
-  
+//  NSURL *videoTempURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), fileNameOut]];
+  NSURL *videoTempURL = [NSURL fileURLWithPath:path];
+
   // WARNING: AVAssetWriter does not overwrite files for us, so remove the destination file if it already exists
   NSFileManager *fileManager = [NSFileManager defaultManager];
   [fileManager removeItemAtPath:[videoTempURL path]  error:NULL];
@@ -56,17 +54,11 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   // Create your own array of UIImages
   NSMutableArray *images = [NSMutableArray array];
   for (int i=0; i<5; i++) {
-    NSString *text = [NSString stringWithFormat:@"%@ + %i", input, i];
+    NSString *text = [NSString stringWithFormat:@"%@", input, i];
     UIImage *image = [self imageFromString:text size:size];
     [images addObject:image];
   }
-  
-  return [self writeImageAsMovie:images toPath:path size:size fileName:fileName];
-}
 
-+ (NSString*)writeImageAsMovie:(NSArray *)array toPath:(NSString*)path size:(CGSize)size fileName:(NSString*)fileName
-{
-  
   NSError *error = nil;
   
   // FIRST, start up an AVAssetWriter instance to write your video
@@ -90,8 +82,6 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   NSParameterAssert([videoWriter canAddInput:writerInput]);
   [videoWriter addInput:writerInput];
   //Start a SESSION of writing.
-  // After you start a session, you will keep adding image frames
-  // until you are complete - then you will tell it you are done.
   [videoWriter startWriting];
   // This starts your video at time = 0
   [videoWriter startSessionAtSourceTime:kCMTimeZero];
@@ -117,14 +107,14 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
       if (i == 0) {presentTime = CMTimeMake(0, 600);}
       // This ensures the first frame starts at 0.
       
-      if (i >= [array count])
+      if (i >= [images count])
       {
         buffer = NULL;
       }
       else
       {
         // This command grabs the next UIImage and converts it to a CGImage
-        buffer = [self pixelBufferFromCGImage:[[array objectAtIndex:i] CGImage] size:size];
+        buffer = [self pixelBufferFromCGImage:[[images objectAtIndex:i] CGImage] size:size];
       }
       
       if (buffer)
@@ -145,9 +135,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
           if (videoWriter.status != AVAssetWriterStatusFailed && videoWriter.status == AVAssetWriterStatusCompleted)
           {
             NSLog(@"Video writing succeeded.");
-//            NSURL *videoTempURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@", path]];
-//            [self saveMedia:videoTempURL];
-            [TextToVideo addAudio:path fileName:fileName];
+            [TextToVideo addAudio:path fileName:fileName callback:successCallback];
           } else
           {
             NSLog(@"Video writing failed: %@", videoWriter.error);
@@ -157,14 +145,13 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
         CVPixelBufferPoolRelease(adaptor.pixelBufferPool);
         
         NSLog (@"Done");
-        return path;
         break;
       }
     }
   }
 }
 
-+ (void) addAudio:(NSString *)path fileName:(NSString *)fileName
++ (void) addAudio:(NSString *)path fileName:(NSString *)fileName callback:(RCTResponseSenderBlock)successCallback
 {
   AVMutableComposition* composition = [[AVMutableComposition alloc]init];
   AVURLAsset* video1 = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:path]options:nil];
@@ -188,15 +175,11 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   AVAssetExportSession *session = [[AVAssetExportSession alloc]initWithAsset:composition presetName:AVAssetExportPresetPassthrough];
   session.outputFileType = AVFileTypeMPEG4;
 
-//  NSString *fileNameOut = @"lebrexports.mp4";
   NSString *fileNameOut = [NSString stringWithFormat:@"text_%@.mp4", fileName];
   NSString *directoryOut = @"Library/Caches/";
   NSString *outFile = [NSString stringWithFormat:@"%@%@", directoryOut, fileNameOut];
   NSString *exportPath = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", outFile]];
   NSURL *exportUrl = [NSURL fileURLWithPath:exportPath];
-
-//  NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-//  NSURL *exportUrl = [NSURL fileURLWithPath:[documentsDirectory stringByAppendingPathComponent:@"exports.mp4"]];
 
   NSFileManager *fileManager = [NSFileManager defaultManager];
   [fileManager removeItemAtPath:[exportUrl path]  error:NULL];
@@ -221,8 +204,8 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
 
       case AVAssetExportSessionStatusCompleted: {
         NSLog(@"Export finished");
-//        NSURL *videoTempURL = exportUrl;
-//        [self saveMedia:videoTempURL];
+        NSArray* events = @[@"text to video complete", exportPath];
+        successCallback(@[[NSNull null], events]);
         break;
       }
       case AVAssetExportSessionStatusUnknown:
@@ -271,67 +254,6 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   CVPixelBufferUnlockBaseAddress(pxbuffer, 0);
   
   return pxbuffer;
-}
-
-+ (void)saveMedia:(NSURL *)video_url {
-  if (video_url) {
-    if([video_url absoluteString].length < 1) {
-      return;
-    }
-    
-    NSLog(@"source will be : %@", video_url.absoluteString);
-    NSURL *sourceURL = video_url;
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:[video_url absoluteString]]) {
-      [PHAssetCreationRequest creationRequestForAssetFromVideoAtFileURL:video_url];
-    } else {
-      
-      NSURLSessionTask *download = [[NSURLSession sharedSession] downloadTaskWithURL:sourceURL completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-        if(error) {
-          NSLog(@"error saving: %@", error.localizedDescription);
-          return;
-        }
-        
-        NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
-        NSURL *tempURL = [documentsURL URLByAppendingPathComponent:[sourceURL lastPathComponent]];
-        
-        [[NSFileManager defaultManager] moveItemAtURL:location toURL:tempURL error:nil];
-        
-        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
-        
-        if (status == PHAuthorizationStatusAuthorized) {
-          [self writeToCameraRoll:tempURL];
-        }
-        else if (status == PHAuthorizationStatusDenied) {
-          NSLog(@"access denied");
-        }
-        else if (status == PHAuthorizationStatusNotDetermined) {
-          [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-            if (status == PHAuthorizationStatusAuthorized) {
-              [self writeToCameraRoll:tempURL];
-            }
-          }];
-        }
-        
-      }];
-      [download resume];
-    }
-  }
-}
-
-+ (void)writeToCameraRoll:(NSURL *)tempURL {
-  [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-    PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:tempURL];
-    NSLog(@"%@", changeRequest.description);
-  } completionHandler:^(BOOL success, NSError *error) {
-    if (success) {
-      NSLog(@"saved down");
-      [[NSFileManager defaultManager] removeItemAtURL:tempURL error:nil];
-    } else {
-      NSLog(@"something wrong %@", error.localizedDescription);
-      [[NSFileManager defaultManager] removeItemAtURL:tempURL error:nil];
-    }
-  }];
 }
 
 @end
