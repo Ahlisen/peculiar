@@ -204,7 +204,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
 
       case AVAssetExportSessionStatusCompleted: {
         NSLog(@"Export finished");
-        NSArray* events = @[@"text to video complete", exportPath];
+        NSArray* events = @[exportPath, @"text to video complete"];
         successCallback(@[[NSNull null], events]);
         break;
       }
