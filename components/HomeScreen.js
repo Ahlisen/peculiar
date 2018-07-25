@@ -19,10 +19,10 @@ import Directory from '../constants/Directory';
 
 const {width, height} = Dimensions.get('window');
 const columns = 5
-const rows = 4
 const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
+const TextToVideo = NativeModules.TextToVideo;
 
 var iconsDict = Platform.select({
   ios: () => icons,
@@ -48,15 +48,6 @@ class HomeScreen extends React.Component {
     super(props);
 
     var thumbnails = [];
-
-    var TextToVideo = NativeModules.TextToVideo;
-		TextToVideo.generate('helsadan dasfgår', '4', (error, events) => {
-			if (error) {
-				console.error(error);
-			} else {
-				console.log(events);
-			}
-		});
 
     if (Platform.OS === 'android') {
       RNFS.readDir(Directory.ICON)
@@ -92,8 +83,40 @@ class HomeScreen extends React.Component {
     };
   }
 
+//Test for promises
+  func = (num) => {
+    return function(){
+      console.log(num);
+    }
+  }
+
+  prepareMerge = (inputArray) => {
+
+    var textArray = []
+    var funcArray = []
+    var parsedArray = inputArray.map((item, index) => {
+        if (item.uri != null) {
+          return Directory.VIDEO+item.key+videoExt
+        } else {
+          console.log(index, item.key)
+          textArray.push({key:item.key+":"+index, index:index})
+          funcArray.push(this.func(index))
+
+          return Directory.TEXT+"/text_4.mp4"
+        }
+    });
+
+    TextToVideo.generate('hej på dig igen', '4', (error, events) => {
+      if (error) {
+        console.error(error)
+      } else {
+        console.log(events)
+        this.merge(parsedArray)
+      }
+    });
+  }
+
   merge = (inputArray) => {
-    inputArray.push(Directory.TEXT+"/text_4.mp4")
 		RNVideoEditor.merge(inputArray,
 		  results => {
 		    console.log("Error: ", results);
@@ -138,6 +161,13 @@ class HomeScreen extends React.Component {
     this.setState({ output })
   };
 
+  addText = () => {
+    console.log("add text here")
+    output = this.state.output
+    output.push({key:"textidentifier", uri:null})
+    this.setState({ output })
+  };
+
   removeLastItem = () => {
     RNFS.readDir(RNFS.CachesDirectoryPath).then((result) => {
       console.log('GOT RESULT', result);
@@ -152,7 +182,7 @@ class HomeScreen extends React.Component {
 
   renderOutput = ({item}) => {
     let source = Platform.select({
-      ios: item.uri,
+      ios: item.uri != null ? item.uri : require('../gui/textButton.png'),
       android: {uri: item.uri}
     });
     return (
@@ -180,36 +210,38 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.output}>
-          <FlatList 
-            extraData={this.state}
-            numColumns={columns}
-            data={this.state.output}
-            renderItem={this.renderOutput}
-          />
-          <TouchableHighlight style={styles.bottomRight}
-          	onPress={
-          		() => this.merge(
-          			this.state.output.map((item) => {
-          				return Directory.VIDEO+item.key+videoExt 
-          			})
-          		)
-          	}>
-            <Image style={styles.image} source={require('../gui/render.png')} resizeMode='cover' />
-          </TouchableHighlight>
+        <View style={styles.container}>
+          <View style={styles.output}>
+            <FlatList 
+              extraData={this.state}
+              numColumns={columns}
+              data={this.state.output}
+              renderItem={this.renderOutput}
+            />
+            
+          </View>
+          <View style={styles.flexRight}>
+            <View style={styles.input}>
+              <FlatList
+                numColumns={columns}
+                data={this.state.thumbnails}
+                renderItem={this.renderInput}
+              />
+            </View>
+            <View style={styles.buttonColumn}>
+                <TouchableHighlight style={styles.bottomRight}
+                  onPress={ () => this.prepareMerge(this.state.output) }>
+                  <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.bottomRight} onPress={() => this.addText()}>
+                  <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
+                  <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
+                </TouchableHighlight>
+              </View>
+            </View>
         </View>
-        <View style={styles.input}>
-          <FlatList
-            numColumns={columns}
-            data={this.state.thumbnails}
-            renderItem={this.renderInput}
-          />
-          <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
-            <Image style={styles.image} source={require('../gui/remove.png')} resizeMode='cover' />
-          </TouchableHighlight>
-        </View>
-      </View>
     );
   }
 }
@@ -221,23 +253,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   output: {
-    position: 'relative',
     width: width,
-    height: itemWidth * rows
+    height: itemWidth * 6
   },
   input: {
-    position: 'relative',
-    width: width,
-    height: itemWidth * rows
+    width: width - itemWidth,
+    height: itemWidth * 3,
+    backgroundColor: 'powderblue'
   },
   bottomRight: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0
   },
   image: {
   	height: itemWidth,
   	width: itemWidth
+  },
+  buttonColumn: {
+    flex: 1,
+    height: itemWidth*3,
+    width: itemWidth
+  },
+  flexRight: {
+    flex: 1,
+    flexDirection: 'row',
   }
 });
 
