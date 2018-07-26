@@ -99,7 +99,7 @@ class ResultScreen extends React.Component {
               { 
                 this.state.paused && 
                 <Image style={styles.videoIcon}
-                  source={require("../gui/play.png")}/>
+                  source={require("../gui/renderButton.png")}/>
               }
             </TouchableOpacity>
         </View>
@@ -111,7 +111,7 @@ class ResultScreen extends React.Component {
         </View>
         <TouchableOpacity onPress={this.share}>
           <Image style={styles.shareIcon}
-            source={require("../gui/share.png")} />
+            source={require("../gui/shareButton.png")} />
         </TouchableOpacity>
       </View>
     );
