@@ -16,6 +16,11 @@ import ResultScreen from './components/ResultScreen';
 import InstructionsScreen from './components/InstructionsScreen';
 import VideoPlayer from './components/VideoPlayer';
 
+let initialRoute = Platform.select({
+  ios: "Home",
+  android: "Start"
+});
+
 const RootStack = createStackNavigator(
   {
     Start: {
@@ -41,7 +46,7 @@ const RootStack = createStackNavigator(
     Instructions: InstructionsScreen
   },
   {
-    initialRouteName: 'Start',
+    initialRouteName: initialRoute,
     cardStyle: { backgroundColor: '#FFFFFF' },
     headerMode: 'screen',
   }
