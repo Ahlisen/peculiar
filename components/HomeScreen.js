@@ -9,7 +9,9 @@ import {
   Image,
   TouchableHighlight,
   Dimensions,
-  NativeModules
+  NativeModules,
+  TextInput,
+  KeyboardAvoidingView
 } from 'react-native';
 
 import RNFS from "react-native-fs";
@@ -146,10 +148,13 @@ class HomeScreen extends React.Component {
     this.setState({ output })
   };
 
-  addText = () => {
-    console.log("add text here")
+  prepareKeyboard = () => {
+    this.refs["myInput"].focus()
+  };
+
+  addTextItem = (text) => {
     output = this.state.output
-    output.push({key:"textidentifier", uri:null})
+    output.push({key:text, uri:null})
     this.setState({ output })
   };
 
@@ -196,15 +201,25 @@ class HomeScreen extends React.Component {
   render() {
     return (
         <View style={styles.container}>
-          <View style={styles.output}>
+          <KeyboardAvoidingView style={styles.output} behavior="padding" enabled>
             <FlatList 
               extraData={this.state}
               numColumns={columns}
               data={this.state.output}
               renderItem={this.renderOutput}
             />
-            
-          </View>
+          </KeyboardAvoidingView>
+          <KeyboardAvoidingView style={styles.keyboard} behavior="padding" enabled>
+            <TextInput
+            style={{height: 40, width: width, borderColor: 'green', borderWidth: 2}}
+            onChangeText={(text) => this.setState({text})}
+            value={this.state.text}
+            returnKeyType={"done"}
+            onSubmitEditing={() => this.addTextItem(this.state.text)}
+            clearButtonMode='always'
+            ref="myInput"
+          />
+          </KeyboardAvoidingView>
           <View style={styles.flexRight}>
             <View style={styles.input}>
               <FlatList
@@ -218,7 +233,7 @@ class HomeScreen extends React.Component {
                   onPress={ () => this.prepareMerge(this.state.output) }>
                   <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
                 </TouchableHighlight>
-                <TouchableHighlight style={styles.bottomRight} onPress={() => this.addText()}>
+                <TouchableHighlight style={styles.bottomRight} onPress={() => this.prepareKeyboard()}>
                   <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
                 </TouchableHighlight>
                 <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
@@ -237,9 +252,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
+  keyboard: {
+    height: 40,
+    alignItems: 'flex-start',
+    justifyContent: 'center'
+  },
   output: {
+    flex: 1,
     width: width,
-    height: itemWidth * 6
+    // maxHeight: itemWidth * 5
   },
   input: {
     width: width - itemWidth,
