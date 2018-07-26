@@ -26,6 +26,7 @@ const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const TextToVideo = NativeModules.TextToVideo;
 
+var counter = 0
 var iconsDict = Platform.select({
   ios: () => icons,
   android: () => {}
@@ -44,6 +45,10 @@ function moveToPictogramDir(file) {
   });
 }
 
+function incrementalCounter() {
+  return counter++
+}
+
 class HomeScreen extends React.Component {
 
   constructor(props) {
@@ -58,8 +63,9 @@ class HomeScreen extends React.Component {
           dir.forEach(icon => {
             if (icon.name[0] != '.') {
               const item = {
-                key: icon.name.slice(0,icon.name.length-4),
-                uri: "file://"+icon.path
+                key: incrementalCounter(),
+                uri: "file://"+icon.path,
+                value: icon.name.slice(0,icon.name.length-4)
               };
               thumbnails.push(item);
             }
@@ -74,7 +80,7 @@ class HomeScreen extends React.Component {
         })
     } else {
       Object.keys(icons).forEach(key => {
-        const item = {key: String(key), uri: icons[key]};
+        const item = {key: incrementalCounter(), uri: icons[key], value: String(key)};
         thumbnails.push(item);
       });
     }
@@ -90,9 +96,9 @@ class HomeScreen extends React.Component {
     var promiseArray = []
     var parsedArray = inputArray.map((item, index) => {
         if (item.uri != null) {
-          return Directory.VIDEO+item.key+videoExt
+          return Directory.VIDEO+item.value+videoExt
         } else {
-          promiseArray.push(TextToVideo.generateAsync(item.key+"", index+""))
+          promiseArray.push(TextToVideo.generateAsync(item.value+"", index+""))
           return Directory.TEXT+"/text_"+index+".mp4"
         }
     });
@@ -154,7 +160,7 @@ class HomeScreen extends React.Component {
 
   addTextItem = (text) => {
     output = this.state.output
-    output.push({key:text, uri:null})
+    output.push({key:incrementalCounter(), uri:null, value: text})
     this.setState({ output })
   };
 
