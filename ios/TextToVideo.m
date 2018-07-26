@@ -11,11 +11,11 @@
 @implementation TextToVideo
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   RCTLogInfo(@"Recieving: %@", text);
   NSLog(@"Recieving: %@", text);
   
-  [TextToVideo videoFromString:text size:CGSizeMake(768.0, 768.0) fileName:index callback:callback];
+  [TextToVideo videoFromString:text size:CGSizeMake(768.0, 768.0) fileName:index resolver:resolve rejecter:reject];
 }
 
 + (UIImage *)imageFromString:(NSString *)input size:(CGSize)size {
@@ -35,7 +35,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   return image;
 }
 
-+ (void)videoFromString:(NSString *)input size:(CGSize)size fileName:(NSString *)fileName callback:(RCTResponseSenderBlock)successCallback
++ (void)videoFromString:(NSString *)input size:(CGSize)size fileName:(NSString *)fileName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject
 {
   // You can save a .mov or a .mp4 file
   NSString *fileNameOut = [NSString stringWithFormat:@"temp_%@.mp4", fileName];
@@ -135,7 +135,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
           if (videoWriter.status != AVAssetWriterStatusFailed && videoWriter.status == AVAssetWriterStatusCompleted)
           {
             NSLog(@"Video writing succeeded.");
-            [TextToVideo addAudio:path fileName:fileName callback:successCallback];
+            [TextToVideo addAudio:path fileName:fileName resolver:resolve rejecter:reject];
           } else
           {
             NSLog(@"Video writing failed: %@", videoWriter.error);
@@ -151,7 +151,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
   }
 }
 
-+ (void) addAudio:(NSString *)path fileName:(NSString *)fileName callback:(RCTResponseSenderBlock)successCallback
++ (void) addAudio:(NSString *)path fileName:(NSString *)fileName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject
 {
   AVMutableComposition* composition = [[AVMutableComposition alloc]init];
   AVURLAsset* video1 = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:path]options:nil];
@@ -204,8 +204,7 @@ RCT_EXPORT_METHOD(generate:(NSString *)text:(NSString *)index:(RCTResponseSender
 
       case AVAssetExportSessionStatusCompleted: {
         NSLog(@"Export finished");
-        NSArray* events = @[exportPath, @"text to video complete"];
-        successCallback(@[[NSNull null], events]);
+        resolve(exportPath);
         break;
       }
       case AVAssetExportSessionStatusUnknown:

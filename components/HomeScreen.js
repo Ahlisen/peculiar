@@ -83,36 +83,21 @@ class HomeScreen extends React.Component {
     };
   }
 
-//Test for promises
-  func = (num) => {
-    return function(){
-      console.log(num);
-    }
-  }
-
   prepareMerge = (inputArray) => {
 
-    var textArray = []
-    var funcArray = []
+    var promiseArray = []
     var parsedArray = inputArray.map((item, index) => {
         if (item.uri != null) {
           return Directory.VIDEO+item.key+videoExt
         } else {
-          console.log(index, item.key)
-          textArray.push({key:item.key+":"+index, index:index})
-          funcArray.push(this.func(index))
-
-          return Directory.TEXT+"/text_4.mp4"
+          promiseArray.push(TextToVideo.generateAsync(item.key+"", index+""))
+          return Directory.TEXT+"/text_"+index+".mp4"
         }
     });
 
-    TextToVideo.generate('hej på dig igen', '4', (error, events) => {
-      if (error) {
-        console.error(error)
-      } else {
-        console.log(events)
-        this.merge(parsedArray)
-      }
+    Promise.all(promiseArray).then((values) => {
+      console.log(values);
+      this.merge(parsedArray);
     });
   }
 
