@@ -21,14 +21,15 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
 + (UIImage *)imageFromString:(NSString *)input size:(CGSize)size {
   NSMutableParagraphStyle* style = [[NSMutableParagraphStyle alloc] init];
   [style setAlignment:NSTextAlignmentCenter];
-  NSDictionary *attributes = @{ NSForegroundColorAttributeName: UIColor.blackColor, NSFontAttributeName: [UIFont boldSystemFontOfSize:96], NSParagraphStyleAttributeName: style };
+  CGFloat fontSize = 128 - [input length];
+  NSDictionary *attributes = @{ NSForegroundColorAttributeName: UIColor.blackColor, NSFontAttributeName: [UIFont fontWithName:@"Rubik-Medium" size:fontSize], NSParagraphStyleAttributeName: style };
   
   UIGraphicsBeginImageContext(size);
   CGContextRef context = UIGraphicsGetCurrentContext();
   [[UIColor whiteColor] setFill];
   CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
   
-  [input drawInRect:CGRectMake(0, size.height/3, size.width, size.height) withAttributes:attributes];
+  [input drawInRect:CGRectMake(50, size.height/3, size.width-100, size.height) withAttributes:attributes];
   UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();
   
