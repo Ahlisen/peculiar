@@ -3,6 +3,11 @@ package se.peculiar;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnziparchive.RNZipArchivePackage;
+import com.reactlibrary.RNVideoEditorPackage;
+import com.brentvatne.react.ReactVideoPackage;
+import cl.json.RNSharePackage;
+import com.rnfs.RNFSPackage;
 import se.peculiar.BuildConfig;
 import com.rnziparchive.RNZipArchivePackage;
 import com.reactlibrary.RNVideoEditorPackage;
@@ -31,6 +36,11 @@ public class MainApplication extends Application implements ReactApplication, Sh
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
             new MainReactPackage(),
+            new RNZipArchivePackage(),
+            new RNVideoEditorPackage(),
+            new ReactVideoPackage(),
+            new RNSharePackage(),
+            new RNFSPackage(),
             new RNZipArchivePackage(),
             new RNVideoEditorPackage(),
             new ReactVideoPackage(),
