@@ -53,7 +53,7 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
   
   // Create your own array of UIImages
   NSMutableArray *images = [NSMutableArray array];
-  NSUInteger videoLength = ([input length] / 2) + 1;
+  NSUInteger videoLength = ([input length] / 2) + 2;
   for (int i=0; i<videoLength; i++) {
     NSString *text = [NSString stringWithFormat:@"%@", input];
     UIImage *image = [self imageFromString:text size:size];
@@ -95,14 +95,14 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
     // Check if the writer is ready for more data, if not, just wait
     if(writerInput.readyForMoreMediaData){
       
-      CMTime frameTime = CMTimeMake(150, 600);
+      CMTime frameTime = CMTimeMake(75, 600);
       // CMTime = Value and Timescale.
       // Timescale = the number of tics per second you want
       // Value is the number of tics
       // For us - each frame we add will be 1/4th of a second
       // Apple recommend 600 tics per second for video because it is a
       // multiple of the standard video rates 24, 30, 60 fps etc.
-      CMTime lastTime=CMTimeMake(i*150, 600);
+      CMTime lastTime=CMTimeMake(i*75, 600);
       CMTime presentTime=CMTimeAdd(lastTime, frameTime);
       
       if (i == 0) {presentTime = CMTimeMake(0, 600);}
