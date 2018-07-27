@@ -38,9 +38,7 @@ const RootStack = createStackNavigator(
     Result: {
       screen: ResultScreen,
       navigationOptions: () => ({
-        title: `Result`,
-        headerBackTitle: `<--`,
-        headerTintColor: 'black'
+        header: null
       })
     },
     Instructions: InstructionsScreen
