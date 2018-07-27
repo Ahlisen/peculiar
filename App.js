@@ -1,12 +1,16 @@
 import React from 'react';
-import {
-  createStackNavigator,
-} from 'react-navigation'
+import { Platform } from 'react-native'
+import { createStackNavigator } from 'react-navigation'
 
 import StartScreen from './components/StartScreen';
 import HomeScreen from './components/HomeScreen';
 import ResultScreen from './components/ResultScreen';
 import InstructionsScreen from './components/InstructionsScreen';
+
+let initialRoute = Platform.select({
+  ios: "Home",
+  android: "Start"
+});
 
 const RootStack = createStackNavigator(
   {
@@ -33,7 +37,7 @@ const RootStack = createStackNavigator(
     Instructions: InstructionsScreen
   },
   {
-    initialRouteName: 'Start',
+    initialRouteName: initialRoute,
     cardStyle: { backgroundColor: '#FFFFFF' },
     headerMode: 'screen',
   }

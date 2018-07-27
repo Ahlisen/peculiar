@@ -100,7 +100,7 @@ class StartScreen extends React.Component {
       <View style={styles.container}>
         <Text style={styles.title} >PICTOGRAM</Text>
         <TouchableHighlight onPress={() => this.props.navigation.replace('Home')}>
-          <Image source={require('../gui/splash.png')} />
+          <Image source={require('../gui/renderButton.png')} />
         </TouchableHighlight>
       </View>
     );

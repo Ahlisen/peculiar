@@ -10,7 +10,9 @@ import {
   TouchableHighlight,
   Dimensions,
   NativeModules,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  TextInput,
+  KeyboardAvoidingView
 } from 'react-native';
 
 import RNFS from "react-native-fs";
@@ -21,11 +23,12 @@ import Directory from '../constants/Directory';
 const {FFMPEGCommandline} = NativeModules;
 const {width, height} = Dimensions.get('window');
 const columns = 5
-const rows = 4
 const itemWidth = width / columns;
 const videoExt = ".mp4";
-const pictogramResultPath = Directory.PICTOGRAM+"pictogram"+videoExt;
+const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
+const TextToVideo = NativeModules.TextToVideo;
 
+var counter = 0
 var iconsDict = Platform.select({
   ios: () => icons,
   android: () => {}
@@ -39,7 +42,7 @@ DeviceEventEmitter
 function moveToPictogramDir(file) {
   return new Promise((resolve, reject) => {
     
-    RNFS.moveFile(file, pictogramResultPath)
+    RNFS.moveFile(file, savedFilePath)
       .then(() => {
         resolve()
       })
@@ -50,27 +53,36 @@ function moveToPictogramDir(file) {
 }
 
 function resetTextCache() {
-  RNFS.unlink(Directory.TEXTVIDEO)
-      .catch((error) => {
-        console.log("Couldn't delete text videos cache!", error);
-      })
-      .then(() => {
-        RNFS.mkdir(Directory.TEXTVIDEO)
-          .then(() => {
-            console.log("Text video cache directory reset!");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
+  RNFS.unlink(Directory.TEXT)
+    .catch((error) => {
+      console.log("Couldn't delete text videos cache!", error);
+    })
+    .then(() => {
+      RNFS.mkdir(Directory.TEXT)
+        .then(() => {
+          console.log("Text video cache directory reset!");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+}
+
+function incrementalCounter() {
+  return counter++
 }
 
 class HomeScreen extends React.Component {
 
+  didFocusSubscription = this.props.navigation.addListener(
+    'didFocus',
+    payload => {
+      resetTextCache();
+    }
+  );
+
   constructor(props) {
     super(props);
-
-    resetTextCache();
 
     this.state = {
       output: [],
@@ -99,8 +111,9 @@ class HomeScreen extends React.Component {
           dir.forEach(icon => {
             if (icon.name[0] != '.') {
               const item = {
-                key: icon.name.slice(0,icon.name.length-4),
-                uri: "file://"+icon.path
+                key: incrementalCounter(),
+                uri: "file://"+icon.path,
+                value: icon.name.slice(0,icon.name.length-4)
               };
               this.state.thumbnails.push(item);
             }
@@ -108,38 +121,42 @@ class HomeScreen extends React.Component {
         })
     } else {
       Object.keys(icons).forEach(key => {
-        const item = {key: String(key), uri: icons[key]};
+        const item = {key: incrementalCounter(), uri: icons[key], value: String(key)};
         this.state.thumbnails.push(item);
       });
     }
   }
 
-  renderText = (outputDirs) => {
-    return new Promise((resolve, reject) => {
-      const output = Directory.TEXTVIDEO + 'text.mp4';
+  componentWillUnmount() {
+    this.didFocusSubscription.remove();
+  }
 
-      FFMPEGCommandline.runCommand ([
+  renderText = (text, index) => {
+    return new Promise((resolve, reject) => {
+      const output = Directory.TEXT + "text_" + index + videoExt;
+      text = text.replace(':', ';'); // Replace colon to semicolon since FFmpeg can't render regular colon
+
+      // TODO: Fixa tiden texten visas
+      FFMPEGCommandline.runCommand([
         '-f', 'lavfi',
         '-i', 'color=c=white:s=768x768:d=1.5',
         '-f', 'lavfi',
-        '-i', 'anullsrc',
-        '-vf', 'drawtext=fontfile='+RNFS.DocumentDirectoryPath+'/Rubik-Regular.ttf:fontsize=48:'+
-        'fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=\'Pictograaaaaaeeeeuuummmm!\nHEllo thEre.\''+
-        ', format=yuv420p',
+        '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
+        '-vf', 'drawtext=fontfile=' + RNFS.DocumentDirectoryPath + '/Rubik-Regular.ttf:fontsize=48:'+
+        "fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='"+ text +"', format=yuv420p",
         '-shortest',
+        '-video_track_timescale', '12800',
+        '-c:v', 'mpeg4',
+        '-hide_banner',
         output
       ])
       .then ((result) => {
         console.log ('result', result);
-        outputDirs.push({
-          key: 'text',
-          uri: output
-        });
-        resolve(outputDirs)
+        resolve(output)
       })
       .catch ((err) => {
         console.error ('error', err);
-        reject()
+        reject(err)
       });
     });
   }
@@ -161,7 +178,7 @@ class HomeScreen extends React.Component {
               this.props.navigation.navigate('Result');
             }).catch((error) => {
               console.log("Could not move to pictogram directory: ", error);
-              RNFS.unlink(pictogramResultPath).then(() => {
+              RNFS.unlink(savedFilePath).then(() => {
                 moveToPictogramDir(file).then(() => {
                   console.log("Great success");
                   this.props.navigation.navigate('Result');
@@ -175,26 +192,60 @@ class HomeScreen extends React.Component {
       });
   }
 
+  /**
+   *  Render text videos
+   */
+  prepareMerge = (inputArray) => {
+    var promiseArray = []
+    var parsedArray = inputArray.map((item, index) => {
+        if (item.uri != null) {
+          return Directory.VIDEO+item.value+videoExt
+        } else {
+          if (Platform.OS === 'android') {
+            promiseArray.push(this.renderText(item.value+"", index+""));
+          } else {
+            promiseArray.push(TextToVideo.generateAsync(item.value+"", index+""));
+          }
+        }
+        return Directory.TEXT+"text_"+index+videoExt
+    });
+
+    Promise.all(promiseArray).then((values) => {
+      console.log(values);
+      this.merge(parsedArray);
+    });
+  }
+
   merge = (inputArray) => {
-    let output = Directory.TEXTVIDEO + "result.mp4";
-    let command = inputArray.reduce((acc, item) => acc.push(...['-i', item]) && acc, []);
-
     if (Platform.OS === 'android') {
-      let trackMappings = "";
-      for (let i = 0; i < inputArray.length; i++) {
-        trackMappings += `[${i}:v] [${i}:a] `;
-      };
-      trackMappings += `concat=n=${inputArray.length}:v=1:a=1 [v] [a]`;
-      command.push(...["-filter_complex", trackMappings, "-map", "[v]", "-map", "[a]", "-preset", "ultrafast", output]);
-      console.log("Running command:", command);
+      const output = Directory.TEXT + "result.mp4";
+      const listLocation = RNFS.CachesDirectoryPath+"/ffmpeg-list.txt";
 
-      FFMPEGCommandline.runCommand(command)
-        .then(result => {
-          console.log("Got merge result:", result);
-          this.prepareAndMoveToPictogramDir(output);
+      let list = inputArray.map(item => { return `file ${item}` }).join('\n');
+      console.log("FFMPEG LIST:", list);
+      RNFS.writeFile(listLocation, list, 'utf8')
+        .then((success) => {
+          console.log('FILE WRITTEN!', success);
+
+          FFMPEGCommandline.runCommand([
+            '-f', 'concat',
+            '-safe', '0',
+            '-i', listLocation,
+            '-c', 'copy',
+            '-video_track_timescale', '12800',
+            '-hide_banner',
+            output
+          ])
+          .then(result => {
+            console.log("Got merge result:", result);
+            this.prepareAndMoveToPictogramDir(output);
+          })
+          .catch(error => {
+            console.log("Could not merge:", error);
+          });
         })
-        .catch(error => {
-          console.log("Could not merge.");
+        .catch((err) => {
+          console.log(err.message);
         });
     } else {
       RNVideoEditor.merge(inputArray,
@@ -215,7 +266,21 @@ class HomeScreen extends React.Component {
     this.setState({ output })
   };
 
+  prepareKeyboard = () => {
+    this.refs["myInput"].focus()
+  };
+
+  addTextItem = (text) => {
+    output = this.state.output
+    output.push({ key: incrementalCounter(), uri: null, value: text })
+    this.setState({ output })
+  };
+
   removeLastItem = () => {
+    RNFS.readDir(RNFS.CachesDirectoryPath).then((result) => {
+      console.log('GOT RESULT', result);
+    })
+
     output = this.state.output
     if (output.length > 0) {
       output.pop()
@@ -225,8 +290,8 @@ class HomeScreen extends React.Component {
 
   renderOutput = ({item}) => {
     let source = Platform.select({
-      ios: item.uri,
-      android: {uri: item.uri}
+      ios: item.uri != null ? item.uri : require('../gui/textButton.png'),
+      android: item.uri != null ? {uri: item.uri} : require('../gui/textButton.png')
     });
     return (
       <View>
@@ -254,65 +319,46 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.output}>
+        <KeyboardAvoidingView style={styles.output} behavior="padding" enabled>
           <FlatList 
             extraData={this.state}
             numColumns={columns}
             data={this.state.output}
             renderItem={this.renderOutput}
           />
-          <TouchableHighlight style={styles.bottomRight}
-          	onPress={
-          		() => {
-                this.renderText(this.state.output)
-                  .then(output => {
-                    
-                    RNFS.readDir(Directory.TEXTVIDEO)
-                      .then(dir => {
-                        console.log("dir:", dir)
-                      })
-                      .catch(e => {
-                        console.log(e)
-                      });
-
-                    this.merge(
-                      output.map((item) => {
-                        if (item.key.startsWith("text")) {
-                          return Directory.TEXTVIDEO+item.key+videoExt
-                        } else {
-                          return Directory.VIDEO+item.key+videoExt
-                        }
-                      })
-                    );
-
-                  })
-                  .catch((error) => {
-                    console.log("Couldn't render text / merge", error);
-                    this.merge(
-                      this.state.output.map((item) => {
-                        if (item.key.startsWith("text")) {
-                          return RNFS.CachesDirectoryPath+item.key+videoExt
-                        } else {
-                          return Directory.VIDEO+item.key+videoExt
-                        }
-                      })
-                    );
-                  });
-              }
-          	}>
-            <Image style={styles.image} source={require('../gui/render.png')} resizeMode='cover' />
-          </TouchableHighlight>
-        </View>
-        <View style={styles.input}>
-          <FlatList
-            numColumns={columns}
-            data={this.state.thumbnails}
-            renderItem={this.renderInput}
+        </KeyboardAvoidingView>
+        <KeyboardAvoidingView style={styles.keyboard} behavior="padding" enabled>
+          <TextInput
+            style={{height: 40, width: width, borderColor: 'green', borderWidth: 2}}
+            onChangeText={(text) => this.setState({text})}
+            value={this.state.text}
+            returnKeyType={"done"}
+            onSubmitEditing={() => this.addTextItem(this.state.text)}
+            clearButtonMode='always'
+            ref="myInput"
           />
-          <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
-            <Image style={styles.image} source={require('../gui/remove.png')} resizeMode='cover' />
-          </TouchableHighlight>
-        </View>
+        </KeyboardAvoidingView>
+        <View style={styles.flexRight}>
+          <View style={styles.input}>
+            <FlatList
+              numColumns={columns}
+              data={this.state.thumbnails}
+              renderItem={this.renderInput}
+            />
+          </View>
+          <View style={styles.buttonColumn}>
+              <TouchableHighlight style={styles.bottomRight}
+                onPress={ () => this.prepareMerge(this.state.output) }>
+                <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.bottomRight} onPress={() => this.prepareKeyboard()}>
+                <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
+                <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
+              </TouchableHighlight>
+            </View>
+          </View>
       </View>
     );
   }
@@ -324,24 +370,35 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
+  keyboard: {
+    height: 40,
+    alignItems: 'flex-start',
+    justifyContent: 'center'
+  },
   output: {
-    position: 'relative',
+    flex: 1,
     width: width,
-    height: itemWidth * rows
+    // maxHeight: itemWidth * 5
   },
   input: {
-    position: 'relative',
-    width: width,
-    height: itemWidth * rows
+    width: width - itemWidth,
+    height: itemWidth * 3,
+    backgroundColor: 'powderblue'
   },
   bottomRight: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0
   },
   image: {
   	height: itemWidth,
   	width: itemWidth
+  },
+  buttonColumn: {
+    flex: 1,
+    height: itemWidth*3,
+    width: itemWidth
+  },
+  flexRight: {
+    flex: 1,
+    flexDirection: 'row',
   }
 });
 

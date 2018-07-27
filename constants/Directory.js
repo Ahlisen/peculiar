@@ -23,9 +23,9 @@ export default class Directory {
         })();
     }
 
-    static get TEXTVIDEO() {
+    static get TEXT() {
         return Platform.select({
-            ios: () => RNFS.CachesDirectoryPath + "/text/",
+            ios: () => RNFS.CachesDirectoryPath + "/",
             android: () => RNFS.CachesDirectoryPath + "/text/"
         })();
     }
