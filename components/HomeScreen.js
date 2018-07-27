@@ -12,7 +12,9 @@ import {
   NativeModules,
   DeviceEventEmitter,
   TextInput,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ActivityIndicator,
+  SafeAreaView
 } from 'react-native';
 
 import RNFS from "react-native-fs";
@@ -22,7 +24,7 @@ import Directory from '../constants/Directory';
 
 const {FFMPEGCommandline} = NativeModules;
 const {width, height} = Dimensions.get('window');
-const columns = 5
+const columns = 7
 const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
@@ -274,6 +276,7 @@ class HomeScreen extends React.Component {
     output = this.state.output
     output.push({ key: incrementalCounter(), uri: null, value: text })
     this.setState({ output })
+    this.setState({ text: null })
   };
 
   removeLastItem = () => {
@@ -318,48 +321,50 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <KeyboardAvoidingView style={styles.output} behavior="padding" enabled>
-          <FlatList 
-            extraData={this.state}
-            numColumns={columns}
-            data={this.state.output}
-            renderItem={this.renderOutput}
-          />
-        </KeyboardAvoidingView>
-        <KeyboardAvoidingView style={styles.keyboard} behavior="padding" enabled>
-          <TextInput
-            style={{height: 40, width: width, borderColor: 'green', borderWidth: 2}}
-            onChangeText={(text) => this.setState({text})}
-            value={this.state.text}
-            returnKeyType={"done"}
-            onSubmitEditing={() => this.addTextItem(this.state.text)}
-            clearButtonMode='always'
-            ref="myInput"
-          />
-        </KeyboardAvoidingView>
-        <View style={styles.flexRight}>
-          <View style={styles.input}>
-            <FlatList
+        <SafeAreaView style={styles.container}>
+          <View style={styles.output}>
+            <FlatList 
+              extraData={this.state}
               numColumns={columns}
-              data={this.state.thumbnails}
-              renderItem={this.renderInput}
+              data={this.state.output}
+              renderItem={this.renderOutput}
             />
           </View>
-          <View style={styles.buttonColumn}>
-              <TouchableHighlight style={styles.bottomRight}
-                onPress={ () => this.prepareMerge(this.state.output) }>
-                <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
-              </TouchableHighlight>
-              <TouchableHighlight style={styles.bottomRight} onPress={() => this.prepareKeyboard()}>
-                <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
-              </TouchableHighlight>
-              <TouchableHighlight style={styles.bottomRight} onPress={() => this.removeLastItem()}>
-                <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
-              </TouchableHighlight>
+          <KeyboardAvoidingView style={styles.textInputContainer} behavior="position" enabled>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={(text) => this.setState({text})}
+              value={this.state.text}
+              returnKeyType={"done"}
+              onSubmitEditing={() => this.addTextItem(this.state.text)}
+              // clearButtonMode='always'
+              ref="myInput"
+              maxLength = {45}
+              numberOfLines = {2}
+            />
+          </KeyboardAvoidingView>
+          <View style={styles.flexRight}>
+            <View style={styles.input}>
+              <FlatList
+                numColumns={columns}
+                data={this.state.thumbnails}
+                renderItem={this.renderInput}
+              />
             </View>
-          </View>
-      </View>
+            <View style={styles.buttonColumn}>
+                <TouchableHighlight style={styles.image}
+                  onPress={ () => this.prepareMerge(this.state.output) }>
+                  <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.image} onPress={() => this.prepareKeyboard()}>
+                  <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.image} onPress={() => this.removeLastItem()}>
+                  <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
+                </TouchableHighlight>
+              </View>
+            </View>
+        </SafeAreaView>
     );
   }
 }
@@ -370,34 +375,37 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
-  keyboard: {
-    height: 40,
+  textInputContainer: {
+    height: 100,
     alignItems: 'flex-start',
     justifyContent: 'center'
+  },
+  textInput: {
+    height: 100,
+    width: width,
+    fontSize: 32,
+    fontFamily: 'Rubik-Regular'
   },
   output: {
     flex: 1,
     width: width,
-    // maxHeight: itemWidth * 5
+    flexGrow: 1,
   },
   input: {
     width: width - itemWidth,
     height: itemWidth * 3,
-    backgroundColor: 'powderblue'
   },
   bottomRight: {
   },
   image: {
   	height: itemWidth,
-  	width: itemWidth
+  	width: itemWidth,
   },
   buttonColumn: {
-    flex: 1,
     height: itemWidth*3,
     width: itemWidth
   },
   flexRight: {
-    flex: 1,
     flexDirection: 'row',
   }
 });

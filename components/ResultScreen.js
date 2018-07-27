@@ -6,7 +6,8 @@ import {
   View,
   Image,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
 
 import Video from 'react-native-video';
@@ -70,7 +71,7 @@ class ResultScreen extends React.Component {
     const completedPercentage = this.getCurrentTimePercentage(this.state.currentTime, this.state.duration);
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
         <View style={styles.videoContainer}>
           <TouchableOpacity onPress={this.togglePlay}
             style={styles.videoContainer}>
@@ -109,11 +110,21 @@ class ResultScreen extends React.Component {
             percent={completedPercentage}
             onNewPercent={this.onSeek.bind(this)} />
         </View>
+        <View style={styles.horizontal}>
+        <TouchableOpacity onPress={() => this.props.navigation.pop()}>
+          <Image style={styles.shareIcon}
+            source={require("../gui/backButton.png")} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={this.share}>
           <Image style={styles.shareIcon}
             source={require("../gui/shareButton.png")} />
         </TouchableOpacity>
-      </View>
+        <TouchableOpacity onPress={() => this.props.navigation.pop()}>
+          <Image style={styles.shareIcon}
+            source={require("../gui/forwardButton.png")} />
+        </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -133,13 +144,13 @@ const styles = StyleSheet.create({
   videoIcon: {
       position: "relative",
       alignSelf: "center",
-      width: 150,
-      height: 150,
+      width: 100,
+      height: 100,
       bottom: 0,
       left: 0,
       right: 0,
       top: 125,
-      opacity: 0.9
+      opacity: 1
   },
   shareIcon: {
     width: 50,
@@ -149,6 +160,11 @@ const styles = StyleSheet.create({
   progressBar: {
     alignSelf: "stretch",
     margin: 20
+  },
+  horizontal: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   }
 });
 
