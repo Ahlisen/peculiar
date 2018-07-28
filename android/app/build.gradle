@@ -142,11 +142,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-zip-archive')
-    compile project(':react-native-video-editor')
-    compile project(':react-native-video')
-    compile project(':react-native-share')
-    compile project(':react-native-fs')
     implementation project(':react-native-zip-archive')
     implementation project(':react-native-video-editor')
     implementation project(':react-native-video')
