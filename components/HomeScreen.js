@@ -22,13 +22,17 @@ import RNVideoEditor from "react-native-video-editor";
 
 import Directory from '../constants/Directory';
 
+String.prototype.insert = function (index, string) {
+  return this.substring(0, index) + string + this.substring(index, this.length);
+};
+
 const {FFMPEGCommandline} = NativeModules;
+const TextToVideo = NativeModules.TextToVideo;
 const {width, height} = Dimensions.get('window');
 const columns = 7
 const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
-const TextToVideo = NativeModules.TextToVideo;
 
 var counter = 0
 var iconsDict = Platform.select({
@@ -138,14 +142,28 @@ class HomeScreen extends React.Component {
       const output = Directory.TEXT + "text_" + index + videoExt;
       text = text.replace(':', ';'); // Replace colon to semicolon since FFmpeg can't render regular colon
 
+      // Add line breaks to long strings
+      const rowLength = 18;
+      const textLength = text.length;
+      if (textLength > rowLength) {
+        text = text.insert(rowLength, '\n\n');
+        if (textLength > rowLength*2) {
+          text = text.insert(rowLength*2 + 2, '\n\n');
+        }
+      }
+
+      const sizeModifier = textLength < 18 ? 192 - Math.max((textLength-2), 0) * 8 : 192 - 16 * 8;
+      const fontSize = Math.max(sizeModifier, 32);
+      const duration = Math.max(Math.min(textLength * 0.2, 1.8), 0.4);
+
       // TODO: Fixa tiden texten visas
       FFMPEGCommandline.runCommand([
         '-f', 'lavfi',
-        '-i', 'color=c=white:s=768x768:d=1.5',
+        '-i', 'color=c=white:s=768x768:d='+duration,
         '-f', 'lavfi',
         '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
-        '-vf', 'drawtext=fontfile=' + RNFS.DocumentDirectoryPath + '/Rubik-Regular.ttf:fontsize=48:'+
-        "fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='"+ text +"', format=yuv420p",
+        '-vf', 'drawtext=fontfile='+RNFS.DocumentDirectoryPath+'/Rubik-Regular.ttf:fontsize='+fontSize+
+        ":fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='"+text+"', format=yuv420p",
         '-shortest',
         '-video_track_timescale', '12800',
         '-c:v', 'mpeg4',
