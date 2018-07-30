@@ -67,13 +67,23 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
   AVAssetWriter *videoWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:path] fileType:AVFileTypeMPEG4 error:&error];
   
   NSParameterAssert(videoWriter);
-  
-  NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 AVVideoCodecTypeH264, AVVideoCodecKey,
-                                 [NSNumber numberWithInt:size.width], AVVideoWidthKey,
-                                 [NSNumber numberWithInt:size.height], AVVideoHeightKey,
-                                 nil];
-  
+
+  NSDictionary *videoSettings;
+
+  if (@available(iOS 11.0, *)) {
+    videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                     AVVideoCodecTypeH264, AVVideoCodecKey,
+                     [NSNumber numberWithInt:size.width], AVVideoWidthKey,
+                     [NSNumber numberWithInt:size.height], AVVideoHeightKey,
+                     nil];
+  } else {
+    videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                     AVVideoCodecH264, AVVideoCodecKey,
+                     [NSNumber numberWithInt:size.width], AVVideoWidthKey,
+                     [NSNumber numberWithInt:size.height], AVVideoHeightKey,
+                     nil];
+  }
+
   AVAssetWriterInput* writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo
                                                                        outputSettings:videoSettings];
   
