@@ -22,7 +22,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		199A3E87149C4CC694522552 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8114F85D5E9A494FA00888CB /* libRNFS.a */; };
 		22FCB4E33F0F4ACB98E3A7A2 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F6C72E76399C410FB5436A80 /* Rubik-Medium.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -39,15 +38,16 @@
 		3AFF82AB4D344B28A4D0BC75 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A7D3C2DDF1F14BA29EF42C8A /* libz.tbd */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		6105D98C20FBD5AE009C4DD9 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
+		6156F647210F6B80003A12AB /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619A28E320CAB32500EDC336 /* libRNFS.a */; };
+		6156F649210F6BAD003A12AB /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 618A903020CAAABC00C8260D /* libRCTVideo.a */; };
+		6156F64A210F6BB6003A12AB /* libRNVideoEditor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619A28D820CAB32500EDC336 /* libRNVideoEditor.a */; };
+		6156F64B210F6BBE003A12AB /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619A28DD20CAB32500EDC336 /* libRNZipArchive.a */; };
+		6156F64C210F6BC7003A12AB /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6101FC5120D45C7400501017 /* libRNShare.a */; };
 		61C598B621063B2C00E13354 /* shorter.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 61C5988921063B2B00E13354 /* shorter.m4a */; };
 		61D14F1520E969BD00022D49 /* TextToVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D14F1420E969BD00022D49 /* TextToVideo.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		AAA5D22F29374DC98DC14107 /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47DD1F70E31B4CC5BC73585D /* libRNZipArchive.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		DA5D8AD121D44DBF9CAC60D6 /* libRNVideoEditor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D017C5038C75485E805BEB18 /* libRNVideoEditor.a */; };
-		F13E1E9A69204534AD912724 /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 917CC1A93A2541F79CF03924 /* libRNShare.a */; };
 		F44D0E3E135A4C279CA086BA /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D2E8AE03C9B4D62821290B7 /* Rubik-Regular.ttf */; };
-		F8DD6D59332347DAB57FB070 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6764B45E70684BB3A2782D8F /* libRCTVideo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -401,20 +401,15 @@
 		2D02E4901E0B4A5D006451C7 /* peculiar-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "peculiar-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D2E8AE03C9B4D62821290B7 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
-		47DD1F70E31B4CC5BC73585D /* libRNZipArchive.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNZipArchive.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		61C5988921063B2B00E13354 /* shorter.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = shorter.m4a; sourceTree = "<group>"; };
 		61D14EE720E9695C00022D49 /* TextToVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextToVideo.h; sourceTree = "<group>"; };
 		61D14F1420E969BD00022D49 /* TextToVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextToVideo.m; sourceTree = "<group>"; };
-		6764B45E70684BB3A2782D8F /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
-		8114F85D5E9A494FA00888CB /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		9007998048344D819A081F6F /* RNZipArchive.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNZipArchive.xcodeproj; path = "../node_modules/react-native-zip-archive/ios/RNZipArchive.xcodeproj"; sourceTree = "<group>"; };
-		917CC1A93A2541F79CF03924 /* libRNShare.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShare.a; sourceTree = "<group>"; };
 		A7D3C2DDF1F14BA29EF42C8A /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
-		D017C5038C75485E805BEB18 /* libRNVideoEditor.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVideoEditor.a; sourceTree = "<group>"; };
 		EF71B8F902914077B7749183 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		F6C72E76399C410FB5436A80 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		F7B5E2F1EA014752BACA9891 /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
@@ -433,6 +428,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6156F64C210F6BC7003A12AB /* libRNShare.a in Frameworks */,
+				6156F64B210F6BBE003A12AB /* libRNZipArchive.a in Frameworks */,
+				6156F64A210F6BB6003A12AB /* libRNVideoEditor.a in Frameworks */,
+				6156F649210F6BAD003A12AB /* libRCTVideo.a in Frameworks */,
+				6156F647210F6B80003A12AB /* libRNFS.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -446,12 +446,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				F8DD6D59332347DAB57FB070 /* libRCTVideo.a in Frameworks */,
-				DA5D8AD121D44DBF9CAC60D6 /* libRNVideoEditor.a in Frameworks */,
-				199A3E87149C4CC694522552 /* libRNFS.a in Frameworks */,
-				AAA5D22F29374DC98DC14107 /* libRNZipArchive.a in Frameworks */,
 				3AFF82AB4D344B28A4D0BC75 /* libz.tbd in Frameworks */,
-				F13E1E9A69204534AD912724 /* libRNShare.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,11 +623,6 @@
 		618A901920CAAAB900C8260D /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				6764B45E70684BB3A2782D8F /* libRCTVideo.a */,
-				D017C5038C75485E805BEB18 /* libRNVideoEditor.a */,
-				8114F85D5E9A494FA00888CB /* libRNFS.a */,
-				47DD1F70E31B4CC5BC73585D /* libRNZipArchive.a */,
-				917CC1A93A2541F79CF03924 /* libRNShare.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
