@@ -303,9 +303,11 @@ class HomeScreen extends React.Component {
   }
 
   addTextItem = (text) => {
-    output = this.state.output
-    output.push({ key: incrementalCounter(), uri: null, value: text })
-    this.setState({ output })
+    if (text != undefined) {
+      output = this.state.output
+      output.push({ key: incrementalCounter(), uri: null, value: text })
+      this.setState({ output })
+    }
     this.clearText()
   };
 
