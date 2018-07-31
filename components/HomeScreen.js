@@ -216,12 +216,17 @@ class HomeScreen extends React.Component {
       });
   }
 
+  checkViability = (inputArray) => {
+    if (inputArray.length > 0) {
+      this.setState({loading: true})
+      this.renderTextVideos(inputArray)
+    }
+  }
+
   /**
    *  Render text videos
    */
-  prepareMerge = (inputArray) => {
-    this.setState({loading: true})
-
+  renderTextVideos = (inputArray) => {
     var promiseArray = []
     var parsedArray = inputArray.map((item, index) => {
         if (item.uri != null) {
@@ -390,7 +395,7 @@ class HomeScreen extends React.Component {
             </View>
             <View style={styles.buttonColumn}>
                 <TouchableHighlight style={styles.image}
-                  onPress={ () => this.prepareMerge(this.state.output) }>
+                  onPress={ () => this.checkViability(this.state.output) }>
                   <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
                 </TouchableHighlight>
                 <TouchableHighlight style={styles.image} onPress={() => this.prepareKeyboard()}>
