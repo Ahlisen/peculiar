@@ -92,7 +92,9 @@ class HomeScreen extends React.Component {
 
     this.state = {
       output: [],
-      thumbnails: []
+      thumbnails: [],
+      loading: false,
+      usingKeyboard: false
     };
 
     if (Platform.OS === 'android') {
@@ -182,6 +184,8 @@ class HomeScreen extends React.Component {
   }
 
   prepareAndMoveToPictogramDir = (file) => {
+    this.setState({loading: false})
+
     RNFS.exists(Directory.PICTOGRAM)
       .then(pictogramDirExists => {
         if (!pictogramDirExists) {
@@ -216,6 +220,8 @@ class HomeScreen extends React.Component {
    *  Render text videos
    */
   prepareMerge = (inputArray) => {
+    this.setState({loading: true})
+
     var promiseArray = []
     var parsedArray = inputArray.map((item, index) => {
         if (item.uri != null) {
@@ -287,14 +293,20 @@ class HomeScreen extends React.Component {
   };
 
   prepareKeyboard = () => {
+    this.setState({ usingKeyboard: true })
     this.refs["myInput"].focus()
   };
+
+  clearText = () => {
+    this.setState({ usingKeyboard: false })
+    this.setState({ text: null })
+  }
 
   addTextItem = (text) => {
     output = this.state.output
     output.push({ key: incrementalCounter(), uri: null, value: text })
     this.setState({ output })
-    this.setState({ text: null })
+    this.clearText()
   };
 
   removeLastItem = () => {
@@ -355,11 +367,16 @@ class HomeScreen extends React.Component {
               value={this.state.text}
               returnKeyType={"done"}
               onSubmitEditing={() => this.addTextItem(this.state.text)}
-              // clearButtonMode='always'
+              onBlur={() => this.clearText()}
               ref="myInput"
               maxLength = {45}
               numberOfLines = {2}
             />
+            {!this.state.usingKeyboard && <ActivityIndicator
+               animating = {this.state.loading}
+               color = '#000'
+               size = "large"
+               style={styles.loading}/>}
           </KeyboardAvoidingView>
           <View style={styles.flexRight}>
             <View style={styles.input}>
@@ -403,6 +420,11 @@ const styles = StyleSheet.create({
     width: width,
     fontSize: 32,
     fontFamily: 'Rubik-Regular'
+  },
+  loading: {
+    height: 100,
+    width: width,
+    marginTop: -100
   },
   output: {
     flex: 1,
