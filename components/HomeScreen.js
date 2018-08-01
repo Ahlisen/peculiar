@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
+  Animated,
+  Easing,
   Platform,
   StyleSheet,
-  Text,
   View,
-  Button,
   FlatList,
   Image,
   TouchableHighlight,
@@ -13,7 +13,6 @@ import {
   DeviceEventEmitter,
   TextInput,
   KeyboardAvoidingView,
-  ActivityIndicator,
   SafeAreaView
 } from 'react-native';
 
@@ -33,6 +32,13 @@ const columns = 7
 const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
+
+// Loading animation
+const spinValue = new Animated.Value(0);
+const spin = spinValue.interpolate({
+  inputRange: [0, 1],
+  outputRange: ['0deg', '360deg']
+});
 
 var counter = 0
 var iconsDict = Platform.select({
@@ -85,6 +91,18 @@ class HomeScreen extends React.Component {
     payload => {
       resetTextCache();
     }
+  );
+
+  loadAnimation = Animated.loop(
+    Animated.timing(
+      spinValue,
+      {
+        toValue: 1,
+        duration: 1600,
+        easing: Easing.linear,
+        useNativeDriver: true
+      }
+    )
   );
 
   constructor(props) {
@@ -184,6 +202,7 @@ class HomeScreen extends React.Component {
   }
 
   prepareAndMoveToPictogramDir = (file) => {
+    this.loadAnimation.stop();
     this.setState({loading: false})
 
     RNFS.exists(Directory.PICTOGRAM)
@@ -218,6 +237,7 @@ class HomeScreen extends React.Component {
 
   checkViability = (inputArray) => {
     if (inputArray.length > 0) {
+      this.loadAnimation.start();
       this.setState({loading: true})
       this.renderTextVideos(inputArray)
     }
@@ -359,6 +379,11 @@ class HomeScreen extends React.Component {
   render() {
     return (
         <SafeAreaView style={styles.container}>
+         { this.state.loading && 
+           <Animated.Image
+            style={[styles.loading, this.props.loading && styles]}
+            source={{uri: 'https://previews.123rf.com/images/anthonycz/anthonycz1703/anthonycz170300035/74189839-black-hourglass-vector-icon-isolated-object-on-white-background.jpg'}}/>
+          }
           <View style={styles.output}>
             <FlatList 
               extraData={this.state}
@@ -379,11 +404,6 @@ class HomeScreen extends React.Component {
               maxLength = {45}
               numberOfLines = {2}
             />
-            {!this.state.usingKeyboard && <ActivityIndicator
-               animating = {this.state.loading}
-               color = '#000'
-               size = "large"
-               style={styles.loading}/>}
           </KeyboardAvoidingView>
           <View style={styles.flexRight}>
             <View style={styles.input}>
@@ -429,9 +449,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Regular'
   },
   loading: {
-    height: 100,
-    width: width,
-    marginTop: -100
+    transform: [{rotate: spin}],
+    height: 200,
+    width: 200,
+    position: 'absolute',
+    alignSelf: 'center'
   },
   output: {
     flex: 1,
