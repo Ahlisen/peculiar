@@ -243,9 +243,6 @@ class HomeScreen extends React.Component {
     }
   }
 
-  /**
-   *  Render text videos
-   */
   renderTextVideos = (inputArray) => {
     var promiseArray = []
     var parsedArray = inputArray.map((item, index) => {
@@ -381,7 +378,7 @@ class HomeScreen extends React.Component {
         <SafeAreaView style={styles.container}>
          { this.state.loading && 
            <Animated.Image
-            style={[styles.loading, this.props.loading && styles]}
+            style={styles.loading}
             source={{uri: 'https://previews.123rf.com/images/anthonycz/anthonycz1703/anthonycz170300035/74189839-black-hourglass-vector-icon-isolated-object-on-white-background.jpg'}}/>
           }
           <View style={styles.output}>
