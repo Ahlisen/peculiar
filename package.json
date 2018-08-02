@@ -7,28 +7,27 @@
     "test": "jest"
   },
   "dependencies": {
-    "react": "16.3.0-alpha.1",
-    "react-native": "0.54.2",
-    "react-native-fs": "^2.9.12",
-    "react-native-share": "^1.0.27",
-    "react-native-video": "^2.0.0",
+    "react": "16.4.2",
+    "react-native": "0.56.0",
+    "react-native-fs": "2.10.14",
+    "react-native-share": "1.1.0",
+    "react-native-video": "3.1.0",
     "react-native-video-editor": "https://github.com/Ahlisen/react-native-video-editor.git",
-    "react-native-zip-archive": "^2.2.5",
-    "react-navigation": "^2.0.1"
+    "react-native-zip-archive": "2.2.6",
+    "react-navigation": "2.9.3"
   },
   "devDependencies": {
-    "babel-jest": "22.4.1",
-    "babel-preset-react-native": "4.0.0",
-    "jest": "22.4.2",
-    "react-test-renderer": "16.3.0-alpha.1"
+    "babel-jest": "23.4.2",
+    "babel-preset-react-native": "^5",
+    "jest": "23.4.2",
+    "react-test-renderer": "16.4.2"
   },
   "rnpm": {
-      "assets": [
-    "./fonts/"
-      ]
+    "assets": [
+      "./fonts/"
+    ]
   },
   "jest": {
     "preset": "react-native"
   }
-
 }

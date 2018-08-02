@@ -40,6 +40,13 @@ const spin = spinValue.interpolate({
   outputRange: ['0deg', '360deg']
 });
 
+// Blinking animation
+const blinkValue = new Animated.Value(0);
+const blink = blinkValue.interpolate({
+  inputRange: [0, 0.49, 0.5, 1],
+  outputRange: [0, 0, 1, 1]
+});
+
 var counter = 0
 var iconsDict = Platform.select({
   ios: () => icons,
@@ -151,6 +158,20 @@ class HomeScreen extends React.Component {
         this.state.thumbnails.push(item);
       });
     }
+  }
+
+  componentDidMount() {
+    Animated.loop(
+      Animated.timing(
+        blinkValue,
+        {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true
+        }
+      )
+    ).start();
   }
 
   componentWillUnmount() {
@@ -346,17 +367,23 @@ class HomeScreen extends React.Component {
   };
 
   renderOutput = ({item}) => {
-    let source = Platform.select({
-      ios: item.uri != null ? item.uri : require('../gui/textButton.png'),
-      android: item.uri != null ? {uri: item.uri} : require('../gui/textButton.png')
-    });
-    return (
-      <View>
-        <Image style={styles.image}
-        source={source}
-        resizeMode='cover' />
-      </View>
-    )
+    if (item.uri != null && item.uri.length == 1 && item.uri === '|') {
+      return (
+        <Animated.View style={[styles.image, styles.inputCaret, {opacity: blink}]} />
+      )
+    } else {
+      let source = Platform.select({
+        ios: item.uri != null ? item.uri : require('../gui/textButton.png'),
+        android: item.uri != null ? {uri: item.uri} : require('../gui/textButton.png')
+      });
+      return (
+        <View>
+          <Image style={styles.image}
+          source={source}
+          resizeMode='cover' />
+        </View>
+      )
+    }
   };
 
   renderInput = ({item}) => {
@@ -385,7 +412,9 @@ class HomeScreen extends React.Component {
             <FlatList 
               extraData={this.state}
               numColumns={columns}
-              data={this.state.output}
+              data={
+                this.state.output.concat([{key: -1, uri: '|', value: '|'}])
+              }
               renderItem={this.renderOutput}
             />
           </View>
@@ -411,18 +440,18 @@ class HomeScreen extends React.Component {
               />
             </View>
             <View style={styles.buttonColumn}>
-                <TouchableHighlight style={styles.image}
-                  onPress={ () => this.checkViability(this.state.output) }>
-                  <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.image} onPress={() => this.prepareKeyboard()}>
-                  <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.image} onPress={() => this.removeLastItem()}>
-                  <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
-                </TouchableHighlight>
-              </View>
+              <TouchableHighlight style={styles.image}
+                onPress={ () => this.checkViability(this.state.output) }>
+                <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.image} onPress={() => this.prepareKeyboard()}>
+                <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.image} onPress={() => this.removeLastItem()}>
+                <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
+              </TouchableHighlight>
             </View>
+          </View>
         </SafeAreaView>
     );
   }
@@ -460,6 +489,12 @@ const styles = StyleSheet.create({
   input: {
     width: width - itemWidth,
     height: itemWidth * 3,
+  },
+  inputCaret: {
+     borderLeftColor: 'black',
+     borderLeftWidth: 5,
+     width: width-2,
+     marginLeft: 2
   },
   bottomRight: {
   },
