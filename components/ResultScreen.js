@@ -163,8 +163,9 @@ const styles = StyleSheet.create({
   },
   horizontal: {
     flex: 1,
+    width: 400,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   }
 });
 
