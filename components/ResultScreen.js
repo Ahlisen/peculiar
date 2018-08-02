@@ -119,7 +119,7 @@ class ResultScreen extends React.Component {
           <Image style={styles.shareIcon}
             source={require("../gui/shareButton.png")} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigation.pop()}>
+        <TouchableOpacity onPress={() => this.props.navigation.replace('Home')}>
           <Image style={styles.shareIcon}
             source={require("../gui/forwardButton.png")} />
         </TouchableOpacity>
@@ -163,8 +163,9 @@ const styles = StyleSheet.create({
   },
   horizontal: {
     flex: 1,
+    width: 400,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   }
 });
 
