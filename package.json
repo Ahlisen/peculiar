@@ -12,7 +12,7 @@
     "react-native-fs": "2.10.14",
     "react-native-share": "1.1.0",
     "react-native-video": "3.1.0",
-    "react-native-video-editor": "https://github.com/Ahlisen/react-native-video-editor.git",
+    "react-native-video-editor": "github:Ahlisen/react-native-video-editor",
     "react-native-zip-archive": "2.2.6",
     "react-navigation": "2.9.3"
   },
