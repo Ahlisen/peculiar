@@ -148,18 +148,14 @@ class HomeScreen extends React.Component {
                 uri: "file://"+icon.path,
                 value: icon.name.slice(0,icon.name.length-4)
               };
-              this.setState(prevState => ({
-                thumbnails: [...prevState.thumbnails, item]
-              }));
+              this.state.thumbnails.push(item);
             }
           });
         })
     } else {
       Object.keys(icons).forEach(key => {
         const item = {key: incrementalCounter(), uri: icons[key], value: String(key)};
-        this.setState(prevState => ({
-          thumbnails: [...prevState.thumbnails, item]
-        }));
+        this.state.thumbnails.push(item);
       });
     }
   }
