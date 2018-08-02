@@ -1,12 +1,15 @@
 apply plugin: 'com.android.library'
+
+def safeExtGet(prop, fallback) {
+	rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
-	compileSdkVersion 27
-
-
+	compileSdkVersion safeExtGet('compileSdkVersion', 27)
 
 	defaultConfig {
-		minSdkVersion 19
-		targetSdkVersion 27
+		minSdkVersion safeExtGet('minSdkVersion', 19)
+		targetSdkVersion safeExtGet('targetSdkVersion', 27)
 		versionCode 1
 		versionName "1.0"
 
