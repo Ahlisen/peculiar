@@ -7,14 +7,15 @@
     "test": "jest"
   },
   "dependencies": {
+    "npm": "^6.3.0",
     "prop-types": "^15.6.2",
     "react": "16.4.1",
-    "react-native": "0.56.0",
-    "react-native-fs": "apan1000/react-native-fs",
-    "react-native-share": "1.1.0",
+    "react-native": "^0.56.0",
+    "react-native-fs": "github:apan1000/react-native-fs",
+    "react-native-share": "^1.1.0",
     "react-native-video": "3.1.0",
     "react-native-video-editor": "github:Ahlisen/react-native-video-editor",
-    "react-native-zip-archive": "apan1000/react-native-zip-archive",
+    "react-native-zip-archive": "github:apan1000/react-native-zip-archive",
     "react-navigation": "2.9.3"
   },
   "devDependencies": {

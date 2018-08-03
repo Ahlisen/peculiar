@@ -440,14 +440,14 @@ class HomeScreen extends React.Component {
               />
             </View>
             <View style={styles.buttonColumn}>
-              <TouchableHighlight style={styles.image}
+              <TouchableHighlight
                 onPress={ () => this.checkViability(this.state.output) }>
                 <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
               </TouchableHighlight>
-              <TouchableHighlight style={styles.image} onPress={() => this.prepareKeyboard()}>
+              <TouchableHighlight onPress={() => this.prepareKeyboard()}>
                 <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
               </TouchableHighlight>
-              <TouchableHighlight style={styles.image} onPress={() => this.removeLastItem()}>
+              <TouchableHighlight onPress={() => this.removeLastItem()}>
                 <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
               </TouchableHighlight>
             </View>
@@ -499,8 +499,9 @@ const styles = StyleSheet.create({
   bottomRight: {
   },
   image: {
-  	height: itemWidth,
-  	width: itemWidth,
+  	height: itemWidth-10,
+  	width: itemWidth-10,
+    margin: 5
   },
   buttonColumn: {
     height: itemWidth*3,
