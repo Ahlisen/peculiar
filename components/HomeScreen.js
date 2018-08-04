@@ -93,10 +93,16 @@ function incrementalCounter() {
 
 class HomeScreen extends React.Component {
 
-  didFocusSubscription = this.props.navigation.addListener(
-    'didFocus',
+  willFocusSubscription = this.props.navigation.addListener(
+    'willFocus',
     payload => {
       resetTextCache();
+      
+      resetOutput = this.props.navigation.getParam('reset', false);
+      if (resetOutput) {
+        this.setState({ output: [] });
+        this.props.navigation.setParams({ 'reset': false });
+      }
     }
   );
 
@@ -106,6 +112,18 @@ class HomeScreen extends React.Component {
       {
         toValue: 1,
         duration: 1600,
+        easing: Easing.linear,
+        useNativeDriver: true
+      }
+    )
+  );
+
+  caretAnimation = Animated.loop(
+    Animated.timing(
+      blinkValue,
+      {
+        toValue: 1,
+        duration: 1000,
         easing: Easing.linear,
         useNativeDriver: true
       }
@@ -138,6 +156,18 @@ class HomeScreen extends React.Component {
         console.log(error);
       });
 
+    } else {
+      Object.keys(icons).forEach(key => {
+        const item = {key: incrementalCounter(), uri: icons[key], value: String(key)};
+        this.state.thumbnails.push(item);
+      });
+    }
+
+    this.caretAnimation.start();
+  }
+
+  componentDidMount() {
+    if (Platform.OS === 'android') {
       RNFS.readDir(Directory.ICON)
         .then(dir => {
           console.log('GOT RESULT dir:', dir);
@@ -148,34 +178,22 @@ class HomeScreen extends React.Component {
                 uri: "file://"+icon.path,
                 value: icon.name.slice(0,icon.name.length-4)
               };
-              this.state.thumbnails.push(item);
+              this.setState(prevState => ({
+                thumbnails: [...prevState.thumbnails, item]
+              }));
             }
           });
-        })
-    } else {
-      Object.keys(icons).forEach(key => {
-        const item = {key: incrementalCounter(), uri: icons[key], value: String(key)};
-        this.state.thumbnails.push(item);
-      });
+        });
     }
   }
 
-  componentDidMount() {
-    Animated.loop(
-      Animated.timing(
-        blinkValue,
-        {
-          toValue: 1,
-          duration: 1000,
-          easing: Easing.linear,
-          useNativeDriver: true
-        }
-      )
-    ).start();
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
   }
 
-  componentWillUnmount() {
-    this.didFocusSubscription.remove();
+  navigateToResult = () => {
+    const { navigation } = this.props;
+    navigation.navigate('Result', { homeRoute: navigation.state });
   }
 
   renderText = (text, index) => {
@@ -233,19 +251,19 @@ class HomeScreen extends React.Component {
             .then(() => {
               moveToPictogramDir(file)
                 .then(() => {
-                  this.props.navigation.navigate('Result');
+                  this.navigateToResult();
                 })
             })
         } else {
           moveToPictogramDir(file)
             .then(() => {
-              this.props.navigation.navigate('Result');
+              this.navigateToResult();
             }).catch((error) => {
               console.log("Could not move to pictogram directory: ", error);
               RNFS.unlink(savedFilePath).then(() => {
                 moveToPictogramDir(file).then(() => {
                   console.log("Great success");
-                  this.props.navigation.navigate('Result');
+                  this.navigateToResult();
                 })
               })
             })

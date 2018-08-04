@@ -119,7 +119,12 @@ class ResultScreen extends React.Component {
           <Image style={styles.shareIcon}
             source={require("../gui/shareButton.png")} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigation.replace('Home')}>
+        <TouchableOpacity onPress={() => {
+            const { navigation } = this.props;
+            const { routeName, key } = navigation.getParam('homeRoute');
+            navigation.navigate({ routeName, key, params: { 'reset': true } });
+          }
+        }>
           <Image style={styles.shareIcon}
             source={require("../gui/forwardButton.png")} />
         </TouchableOpacity>
