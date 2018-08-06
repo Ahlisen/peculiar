@@ -173,14 +173,16 @@ public class DownloaderClientMarshaller {
             mContext = c;
             Intent bindIntent = new Intent(c, mDownloaderServiceClass);
             bindIntent.putExtra(PARAM_MESSENGER, mMessenger);
-            if ( !c.bindService(bindIntent, mConnection, Context.BIND_DEBUG_UNBIND) ) {
-                if ( Constants.LOGVV ) {
-                    Log.d(Constants.TAG, "Service Unbound");
-                }
-            } else {
-                mBound = true;
-            }
-                
+//            if ( !c.bindService(bindIntent, mConnection, Context.BIND_IMPORTANT) ) {
+//                if ( Constants.LOGVV ) {
+//                    Log.d(Constants.TAG, "Service Unbound");
+//                }
+//            } else {
+//                mBound = true;
+//            }
+
+            c.bindService(bindIntent, mConnection, Context.BIND_IMPORTANT);
+            mBound = true;
         }
 
         @Override

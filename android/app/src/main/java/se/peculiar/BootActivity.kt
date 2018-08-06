@@ -15,6 +15,7 @@ import se.peculiar.googleplaydownloaderlibrary.*
 import se.peculiar.googleplaydownloaderlibrary.impl.DownloaderService
 import java.io.DataInputStream
 import java.io.IOException
+import java.lang.ref.WeakReference
 import java.util.zip.CRC32
 
 
@@ -218,115 +219,7 @@ class BootActivity : AppCompatActivity(), IDownloaderClient {
 	 * @return true if XAPKZipFile is successful
 	 */
 	private fun validateXAPKZipFiles() {
-		val validationTask = object : AsyncTask<Any, DownloadProgressInfo, Boolean>() {
-
-			override fun onPreExecute() {
-				downloadGroup.visibility = View.VISIBLE
-				super.onPreExecute()
-			}
-
-			override fun doInBackground(vararg params: Any): Boolean? {
-				for (xf in xAPKS) {
-					var fileName = Helpers.getExpansionAPKFileName(this@BootActivity,
-							xf.mIsMain,
-							xf.mFileVersion)
-					if (!Helpers.doesFileExist(this@BootActivity, fileName, xf.mFileSize, false))
-						return false
-					fileName = Helpers.generateSaveFileName(this@BootActivity, fileName)
-					val zrf: ZipResourceFile
-					val buf = ByteArray(1024 * 256)
-					try {
-						zrf = ZipResourceFile(fileName)
-						val entries = zrf.allEntries
-						/**
-						 * First calculate the total compressed length
-						 */
-						var totalCompressedLength: Long = 0
-						for (entry in entries) {
-							totalCompressedLength += entry.mCompressedLength
-						}
-						var averageVerifySpeed = 0f
-						var totalBytesRemaining = totalCompressedLength
-						var timeRemaining: Long
-						/**
-						 * Then calculate a CRC for every file in the Zip file,
-						 * comparing it to what is stored in the Zip directory.
-						 * Note that for compressed Zip files we must extract
-						 * the contents to do this comparison.
-						 */
-						for (entry in entries) {
-							if (-1L != entry.mCRC32) {
-								var length = entry.mUncompressedLength
-								val crc = CRC32()
-								var dis: DataInputStream? = null
-								try {
-									dis = DataInputStream(zrf.getInputStream(entry.mFileName))
-
-									var startTime = SystemClock.uptimeMillis()
-									while (length > 0) {
-										val seek = if (length > buf.size) buf.size else length.toInt()
-										dis.readFully(buf, 0, seek)
-										crc.update(buf, 0, seek)
-										length -= seek.toLong()
-										val currentTime = SystemClock.uptimeMillis()
-										val timePassed = currentTime - startTime
-										if (timePassed > 0) {
-											val currentSpeedSample = seek.toFloat() / timePassed.toFloat()
-											averageVerifySpeed = if (0f != averageVerifySpeed) {
-												SMOOTHING_FACTOR * currentSpeedSample + (1 - SMOOTHING_FACTOR) * averageVerifySpeed
-											} else {
-												currentSpeedSample
-											}
-											totalBytesRemaining -= seek.toLong()
-											timeRemaining = (totalBytesRemaining / averageVerifySpeed).toLong()
-											this.publishProgress(DownloadProgressInfo(
-													totalCompressedLength,
-													totalCompressedLength - totalBytesRemaining,
-													timeRemaining,
-													averageVerifySpeed))
-										}
-										startTime = currentTime
-										if (mCancelValidation)
-											return true
-									}
-									if (crc.value !== entry.mCRC32) {
-										Log.e(Constants.TAG,
-												"CRC does not match for entry: " + entry.mFileName)
-										Log.e(Constants.TAG, "In file: " + entry.zipFileName)
-										return false
-									}
-								} finally {
-									if (null != dis) {
-										dis.close()
-									}
-								}
-							}
-						}
-					} catch (e: IOException) {
-						e.printStackTrace()
-						return false
-					}
-
-				}
-				return true
-			}
-
-			override fun onProgressUpdate(vararg values: DownloadProgressInfo) {
-				onDownloadProgress(values[0])
-				super.onProgressUpdate(values[0])
-			}
-
-			override fun onPostExecute(result: Boolean) {
-				if (result) {
-					downloadGroup.visibility = View.GONE
-					startMainActivity()
-				} else {
-					downloadGroup.visibility = View.VISIBLE
-				}
-				super.onPostExecute(result)
-			}
-
-		}
+		val validationTask = ValidationTask(this)
 		validationTask.execute()
 	}
 
@@ -351,6 +244,117 @@ class BootActivity : AppCompatActivity(), IDownloaderClient {
 			startActivity(intent)
 			finish()
 		}, 1000)
+	}
+
+	class ValidationTask(private val context: BootActivity) : AsyncTask<Any, DownloadProgressInfo, Boolean>() {
+
+		private val activityReference = WeakReference<BootActivity>(context)
+
+		override fun onPreExecute() {
+			context.downloadGroup.visibility = View.VISIBLE
+			super.onPreExecute()
+		}
+
+		override fun doInBackground(vararg params: Any): Boolean? {
+			for (xf in context.xAPKS) {
+				var fileName = Helpers.getExpansionAPKFileName(context,
+						xf.mIsMain,
+						xf.mFileVersion)
+				if (!Helpers.doesFileExist(context, fileName, xf.mFileSize, false))
+					return false
+				fileName = Helpers.generateSaveFileName(context, fileName)
+				val zrf: ZipResourceFile
+				val buf = ByteArray(1024 * 256)
+				try {
+					zrf = ZipResourceFile(fileName)
+					val entries = zrf.allEntries
+					/**
+					 * First calculate the total compressed length
+					 */
+					var totalCompressedLength: Long = 0
+					for (entry in entries) {
+						totalCompressedLength += entry.mCompressedLength
+					}
+					var averageVerifySpeed = 0f
+					var totalBytesRemaining = totalCompressedLength
+					var timeRemaining: Long
+					/**
+					 * Then calculate a CRC for every file in the Zip file,
+					 * comparing it to what is stored in the Zip directory.
+					 * Note that for compressed Zip files we must extract
+					 * the contents to do this comparison.
+					 */
+					for (entry in entries) {
+						if (-1L != entry.mCRC32) {
+							var length = entry.mUncompressedLength
+							val crc = CRC32()
+							var dis: DataInputStream? = null
+							try {
+								dis = DataInputStream(zrf.getInputStream(entry.mFileName))
+
+								var startTime = SystemClock.uptimeMillis()
+								while (length > 0) {
+									val seek = if (length > buf.size) buf.size else length.toInt()
+									dis.readFully(buf, 0, seek)
+									crc.update(buf, 0, seek)
+									length -= seek.toLong()
+									val currentTime = SystemClock.uptimeMillis()
+									val timePassed = currentTime - startTime
+									if (timePassed > 0) {
+										val currentSpeedSample = seek.toFloat() / timePassed.toFloat()
+										averageVerifySpeed = if (0f != averageVerifySpeed) {
+											SMOOTHING_FACTOR * currentSpeedSample +
+													(1 - SMOOTHING_FACTOR) * averageVerifySpeed
+										} else {
+											currentSpeedSample
+										}
+										totalBytesRemaining -= seek.toLong()
+										timeRemaining = (totalBytesRemaining / averageVerifySpeed).toLong()
+										this.publishProgress(DownloadProgressInfo(
+												totalCompressedLength,
+												totalCompressedLength - totalBytesRemaining,
+												timeRemaining,
+												averageVerifySpeed))
+									}
+									startTime = currentTime
+									if (context.mCancelValidation)
+										return true
+								}
+								if (crc.value != entry.mCRC32) {
+									Log.e(Constants.TAG,
+											"CRC does not match for entry: " + entry.mFileName)
+									Log.e(Constants.TAG, "In file: " + entry.zipFileName)
+									return false
+								}
+							} finally {
+								dis?.close()
+							}
+						}
+					}
+				} catch (e: IOException) {
+					e.printStackTrace()
+					return false
+				}
+
+			}
+			return true
+		}
+
+		override fun onProgressUpdate(vararg values: DownloadProgressInfo) {
+			context.onDownloadProgress(values[0])
+			super.onProgressUpdate(values[0])
+		}
+
+		override fun onPostExecute(result: Boolean) {
+			if (result) {
+				context.downloadGroup.visibility = View.GONE
+				context.startMainActivity()
+			} else {
+				context.downloadGroup.visibility = View.VISIBLE
+			}
+			super.onPostExecute(result)
+		}
+
 	}
 
 	// region Expansion Downloader
