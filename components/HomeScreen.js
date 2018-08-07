@@ -436,7 +436,7 @@ class HomeScreen extends React.Component {
               renderItem={this.renderOutput}
             />
           </View>
-          <KeyboardAvoidingView style={styles.textInputContainer} behavior="position" enabled>
+          <KeyboardAvoidingView style={styles.textInputContainer} editable={Platform.OS === 'android' ? null : 'position'} enabled>
             <TextInput
               style={styles.textInput}
               onChangeText={(text) => this.setState({text})}
@@ -448,6 +448,7 @@ class HomeScreen extends React.Component {
               maxLength = {45}
               numberOfLines = {2}
             />
+            { !this.state.usingKeyboard && <View style={styles.textBlockingView}/> }
           </KeyboardAvoidingView>
           <View style={styles.flexRight}>
             <View style={styles.input}>
@@ -492,6 +493,11 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Rubik-Regular'
   },
+  textBlockingView: {
+    height:100,
+    width: width,
+    marginTop: -100
+  },
   loading: {
     transform: [{rotate: spin}],
     height: 200,
@@ -519,7 +525,7 @@ const styles = StyleSheet.create({
   image: {
   	height: itemWidth-10,
   	width: itemWidth-10,
-    margin: 5
+    margin: 3
   },
   buttonColumn: {
     height: itemWidth*3,
