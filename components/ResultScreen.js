@@ -98,9 +98,10 @@ class ResultScreen extends React.Component {
               // onTimedMetadata={}  // Callback when the stream receive some metadata
               style={styles.video} />
               { 
-                this.state.paused && 
-                <Image style={styles.videoIcon}
+                this.state.paused && <View style={styles.playIconContainer}>
+                  <Image style={styles.playIcon}
                   source={require("../gui/renderButton.png")}/>
+                </View>
               }
             </TouchableOpacity>
         </View>
@@ -146,16 +147,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-  videoIcon: {
-      position: "relative",
-      alignSelf: "center",
+  playIcon: {
       width: 100,
       height: 100,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      top: 125,
       opacity: 1
+  },
+  playIconContainer: {
+    width: 400,
+    height: 400,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)'
   },
   shareIcon: {
     width: 50,
