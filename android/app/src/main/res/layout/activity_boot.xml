@@ -13,19 +13,17 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:orientation="horizontal"
-		app:layout_constraintGuide_percent="0.2"/>
+		app:layout_constraintGuide_percent="0.1"/>
 
-	<TextView
-		android:id="@+id/title_text"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/app_name"
-		android:textSize="60dp"
-		android:padding="10dp"
+	<ImageView
+		android:id="@+id/icon"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:src="@drawable/ic_hen"
 		app:layout_constraintTop_toTopOf="@id/top_guideline"
+		app:layout_constraintBottom_toTopOf="@id/download_text"
 		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		tools:ignore="SpUsage"/>
+		app:layout_constraintRight_toRightOf="parent"/>
 
 	<android.support.constraint.Group
 		android:id="@+id/download_group"
@@ -43,9 +41,11 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:lines="2"
+		android:layout_marginTop="20dp"
 		android:padding="10dp"
 		android:text="@string/wait_file_download"
-		app:layout_constraintTop_toBottomOf="@id/title_text"
+		app:layout_constraintTop_toBottomOf="@id/icon"
+		app:layout_constraintBottom_toTopOf="@id/download_progress_bar"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"
 		/>
@@ -59,6 +59,7 @@
 		android:max="100"
 		tools:progress="45"
 		app:layout_constraintTop_toBottomOf="@id/download_text"
+		app:layout_constraintBottom_toTopOf="@id/download_progress_percent_text"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"/>
 
@@ -71,7 +72,15 @@
 		android:padding="10dp"
 		tools:text="45%"
 		app:layout_constraintTop_toBottomOf="@id/download_progress_bar"
+		app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintRight_toRightOf="parent"/>
+
+	<android.support.constraint.Guideline
+		android:id="@+id/bottom_guideline"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_percent="0.9"/>
 
 </android.support.constraint.ConstraintLayout>
