@@ -4,8 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   Image,
+  Button,
   PermissionsAndroid
 } from 'react-native';
 
@@ -23,17 +23,17 @@ async function requestReadWriteStoragePermission() {
 
     var granted = true;
     Object.keys(permissions).forEach(key => {
-      console.log("Permission:", permissions[key]);
+      console.log("StartScreen", "Permission:", permissions[key]);
       if (permissions[key] !== PermissionsAndroid.RESULTS.GRANTED) {
         granted = false;
       }
     });
 
     if (granted === true) {
-      console.log("You can use the file system")
+      console.log("StartScreen", "You can use the file system")
       return true
     } else {
-      console.log("Read external storage permission denied")
+      console.log("StartScreen", "Read external storage permission denied")
       return false
     }
   } catch (err) {
@@ -45,15 +45,15 @@ async function requestReadWriteStoragePermission() {
 function unzipExpansionFiles() {
   return RNFS.readDir(RNFS.ExternalStorageDirectoryPath + "/Android/obb/se.peculiar")
     .then((result) => {
-      console.log('GOT RESULT:', result);
+      console.log("StartScreen", 'GOT RESULT:', result);
       return unzip(result[0].path, RNFS.DocumentDirectoryPath);
     })
     .then((path) => {
-      console.log(`GOT RESULT: unzip completed at ${path}`);
+      console.log("StartScreen", `GOT RESULT: unzip completed at ${path}`);
       return Promise.resolve();
     })
     .catch((err) => {
-      console.log("Got Error:", err.message, err.code);
+      console.log("StartScreen", "Got Error:", err.message, err.code);
       return Promise.reject(err.message);
     });
 }
@@ -62,46 +62,64 @@ class StartScreen extends React.Component {
 
   constructor() {
     super();
+
+    this.state = {
+      requestDenied: false,
+      buttonDisabled: true
+    }
     
     if (Platform.OS === 'android') {
-      this.state = { buttonDisabled: true };
-
-      (async () => {
-        if (await requestReadWriteStoragePermission() === false) {
-          // TODO: Show request-permission-button
-          return;
-        }
-
-        RNFS.exists(Directory.VIDEO)
-          .then(videosExist => {
-            if (!videosExist) {
-              unzipExpansionFiles()
-                .then(() => {
-                  this.setState({ buttonDisabled: false });
-                  console.log("Unzipped & Button enabled!");
-                })
-                .catch(() => {
-                  // TODO: Retry unzip
-                  this.setState({ buttonDisabled: true });
-                });
-            } else {
-              this.setState({ buttonDisabled: false});
-              console.log("Button enabled!");
-            }
-          });
-      })();
+      this.state.buttonDisabled = true;
+      this.requestPermissionAndUnzip();
     } else {
-      this.state = { buttonDisabled: false };
+      this.state.buttonDisabled = false;
     }
+  }
+
+  requestPermissionAndUnzip = async () => {
+      if (await requestReadWriteStoragePermission() === false) {
+        this.setState({ requestDenied: true });
+        return;
+      }
+      this.checkAndUnzipAssets();
+  }
+
+  checkAndUnzipAssets = () => {
+    RNFS.exists(Directory.VIDEO)
+      .then(videosExist => {
+        if (!videosExist) {
+          unzipExpansionFiles()
+            .then(() => {
+              console.log("StartScreen", "Unzip complete!");
+              this.props.navigation.replace('Home');
+            })
+            .catch(() => {
+              // TODO; Error message
+            });
+        } else {
+          this.props.navigation.replace('Home');
+        }
+      });
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title} >PICTOGRAM</Text>
-        <TouchableHighlight onPress={() => this.props.navigation.replace('Home')}>
-          <Image source={require('../gui/renderButton.png')} />
-        </TouchableHighlight>
+      <View style={[styles.container, {opacity: this.state.requestDenied ? 1:0}]}>
+        <Text style={styles.title}>PICTOGRAM</Text>
+        <Image source={require('../gui/henIcon.png')} style={{width: 127, height: 256}} />
+        <Text style={styles.description}>
+          Pictogram needs
+          <Text style={{fontWeight: "bold"}}> read and write </Text>
+          access to the phone's storage to
+          <Text style={{fontWeight: "bold"}}> read the app's videos</Text>
+          , and allow you to
+          <Text style={{fontWeight: "bold"}}> save your pictograms.</Text>
+        </Text>
+        <Button onPress={this.requestPermissionAndUnzip}
+          disabled={!this.state.requestDenied}
+          title="Request permission"
+          color="#000"
+          accessibilityLabel="Request storage permission" />
       </View>
     );
   }
@@ -117,6 +135,12 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 42,
+  },
+  description: {
+    color: 'black',
+    textAlign: 'center',
+    paddingHorizontal: 16,
+    marginVertical: -40
   }
 });
 
