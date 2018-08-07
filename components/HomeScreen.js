@@ -448,6 +448,7 @@ class HomeScreen extends React.Component {
               maxLength = {45}
               numberOfLines = {2}
             />
+            { !this.state.usingKeyboard && <View style={styles.textBlockingView}/> }
           </KeyboardAvoidingView>
           <View style={styles.flexRight}>
             <View style={styles.input}>
@@ -491,6 +492,11 @@ const styles = StyleSheet.create({
     width: width,
     fontSize: 32,
     fontFamily: 'Rubik-Regular'
+  },
+  textBlockingView: {
+    height:100,
+    width: width,
+    marginTop: -100
   },
   loading: {
     transform: [{rotate: spin}],
