@@ -7,11 +7,12 @@ import {
   Image,
   Button,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  Share
 } from 'react-native';
 
 import Video from 'react-native-video';
-import Share from "react-native-share";
+import RNShare from "react-native-share";
 
 import Directory from '../constants/Directory';
 import ProgressController from "./ProgressController";
@@ -30,17 +31,26 @@ class ResultScreen extends React.Component {
   share = () => {
     const sharePath = "file://"+this.state.source;
     console.log("Sharing", sharePath);
-    Share.open({
-      title: 'Share your amazing Pictogram!',
-      message: 'Wow! Look at this! An amazing Pictogram!',
-      url: sharePath
-    })
-    .then(sharedResult => {
-      console.log("GOT RESULT shared:", sharedResult);
-    })
-    .catch(err => {
-      console.log("Share error:", err);
-    });
+
+    if (Platform.OS === 'android') {
+      RNShare.open({
+        title: 'Share your amazing Pictogram!',
+        message: 'Wow! Look at this! An amazing Pictogram!',
+        url: sharePath
+      })
+      .then(sharedResult => {
+        console.log("GOT RESULT shared:", sharedResult);
+      })
+      .catch(err => {
+        console.log("Share error:", err);
+      });
+    } else {
+      const content = {
+        title: 'Share your Pictogram!',
+        url: sharePath
+      };
+      Share.share(content);
+    }
   }
 
   togglePlay = () => {
