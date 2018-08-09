@@ -275,7 +275,7 @@ class HomeScreen extends React.Component {
   }
 
   checkViability = (inputArray) => {
-    if (inputArray.length > 0) {
+    if (inputArray.length > 0 && this.state.loading == false) {
       this.loadAnimation.start();
       this.setState({loading: true})
       this.renderTextVideos(inputArray)
