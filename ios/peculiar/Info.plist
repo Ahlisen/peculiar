@@ -26,6 +26,26 @@
 	<string>You can save your Pictograms to your photo library here!</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+    <string>fb</string>
+    <string>fbapi</string>
+    <string>fbauth2</string>
+    <string>fbshareextension</string>
+    <string>fb-messenger-api</string>
+    <string>twitter</string>
+    <string>viber</string>
+    <string>whatsapp</string>
+    <string>wechat</string>
+    <string>line</string>
+    <string>instagram</string>
+    <string>kakaotalk</string>
+    <string>mqq</string>
+    <string>vk</string>
+    <string>comgooglemaps</string>
+    <string>googlephotos</string>
+    <string>ha</string>
+  </array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
