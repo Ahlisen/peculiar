@@ -172,19 +172,21 @@ class HomeScreen extends React.Component {
     if (Platform.OS === 'android') {
       RNFS.readDir(Directory.ICON)
         .then(dir => {
-          console.log('GOT RESULT dir:', dir);
-          dir.forEach(icon => {
-            if (icon.name[0] != '.') {
-              const item = {
-                key: incrementalCounter(),
-                uri: "file://"+icon.path,
-                value: icon.name.slice(0,icon.name.length-4)
-              };
-              this.setState(prevState => ({
-                thumbnails: [...prevState.thumbnails, item]
-              }));
-            }
+          dir.sort((a, b) => {
+            var textA = a.name.toLowerCase();
+            var textB = b.name.toLowerCase();
+            return textA < textB ? -1 : textA > textB ? 1 : 0;
           });
+
+          let items = dir.map(icon => {
+            return {
+              key: incrementalCounter(),
+              uri: "file://"+icon.path,
+              value: icon.name.slice(0,icon.name.length-4)
+            };
+          });
+
+          this.setState({ thumbnails: items });
         });
     }
   }
@@ -222,12 +224,11 @@ class HomeScreen extends React.Component {
         '-f', 'lavfi',
         '-i', 'color=c=white:s=768x768:d='+duration,
         '-f', 'lavfi',
-        '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
+        '-i', 'anullsrc=channel_layout=stereo:sample_rate=48000',
         '-vf', 'drawtext=fontfile='+RNFS.DocumentDirectoryPath+'/Rubik-Regular.ttf:fontsize='+fontSize+
         ":fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='"+text+"', format=yuv420p",
         '-shortest',
         '-video_track_timescale', '12800',
-        '-c:v', 'mpeg4',
         '-hide_banner',
         output
       ])
