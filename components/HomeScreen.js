@@ -434,12 +434,14 @@ class HomeScreen extends React.Component {
           }
           <View style={styles.output}>
             <FlatList 
+              ref="outputList"
               extraData={this.state}
               numColumns={columns}
               data={
                 this.state.output.concat([{key: -1, uri: '|', value: '|'}])
               }
               renderItem={this.renderOutput}
+              onContentSizeChange={() => this.refs.outputList.scrollToEnd({animated: true})}
             />
           </View>
           <KeyboardAvoidingView style={styles.textInputContainer} behavior={Platform.OS === 'android' ? null : 'position'} enabled>
@@ -522,7 +524,7 @@ const styles = StyleSheet.create({
   },
   inputCaret: {
      borderLeftColor: 'black',
-     borderLeftWidth: 5,
+     borderLeftWidth: 3,
      width: width-2,
      marginLeft: 2
   },
