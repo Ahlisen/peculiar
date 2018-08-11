@@ -32,6 +32,7 @@ const columns = 7
 const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
+const textInputHeight = 70;
 
 // Loading animation
 const spinValue = new Animated.Value(0);
@@ -483,20 +484,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   textInputContainer: {
-    height: 100,
+    height: textInputHeight,
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
   textInput: {
-    height: 100,
+    height: textInputHeight,
     width: width,
     fontSize: 32,
     fontFamily: 'Rubik-Regular'
   },
   textBlockingView: {
-    height:100,
+    height:textInputHeight,
     width: width,
-    marginTop: -100
+    marginTop: -textInputHeight
   },
   loading: {
     transform: [{rotate: spin}],
