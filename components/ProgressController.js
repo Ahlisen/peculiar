@@ -17,7 +17,7 @@ class ProgressController extends Component {
     }
 
     computeScreenX(percent) {
-        return percent * this.state.width;
+        return percent * this.state.width / 100;
     }
 
     componentWillMount() {
@@ -32,7 +32,7 @@ class ProgressController extends Component {
             },
             onPanResponderMove: (e, gestureState) => {
                 let totalX = this.state.slideX._offset + gestureState.dx;
-                let newPercent = (totalX / this.state.width);
+                let newPercent = (totalX / this.state.width) * 100;
                 this.notifyPercentChange(newPercent, true);
                 Animated.event([
                     null, {dx: this.state.slideX}
@@ -40,7 +40,7 @@ class ProgressController extends Component {
             },
             onPanResponderRelease: (e, gesture) => {
                 this.state.slideX.flattenOffset();
-                let newPercent = (this.state.slideX._value / this.state.width);
+                let newPercent = (this.state.slideX._value / this.state.width) * 100;
                 this.setState({moving: false});
                 this.notifyPercentChange(newPercent, false);
             }
@@ -50,7 +50,7 @@ class ProgressController extends Component {
     notifyPercentChange(newPercent, paused) {
         let {onNewPercent} = this.props;
         if (onNewPercent instanceof Function) {
-            onNewPercent(newPercent, paused);
+            onNewPercent(newPercent/100, paused);
         }
     }
 
@@ -59,7 +59,7 @@ class ProgressController extends Component {
     }
 
     onLinePressed(e) {
-        let newPercent = (e.nativeEvent.locationX / this.state.width);
+        let newPercent = (e.nativeEvent.locationX / this.state.width) * 100;
         this.notifyPercentChange(newPercent, false);
     }
 
