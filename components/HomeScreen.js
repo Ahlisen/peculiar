@@ -111,7 +111,7 @@ class HomeScreen extends React.Component {
       spinValue,
       {
         toValue: 1,
-        duration: 1600,
+        duration: 1000,
         easing: Easing.linear,
         useNativeDriver: true
       }
@@ -424,7 +424,7 @@ class HomeScreen extends React.Component {
          { this.state.loading && 
            <Animated.Image
             style={styles.loading}
-            source={{uri: 'https://previews.123rf.com/images/anthonycz/anthonycz1703/anthonycz170300035/74189839-black-hourglass-vector-icon-isolated-object-on-white-background.jpg'}}/>
+            source={require('../gui/loading.png')}/>
           }
           <View style={styles.output}>
             <FlatList 
@@ -500,8 +500,8 @@ const styles = StyleSheet.create({
   },
   loading: {
     transform: [{rotate: spin}],
-    height: 200,
-    width: 200,
+    height: 100,
+    width: 100,
     position: 'absolute',
     alignSelf: 'center'
   },
