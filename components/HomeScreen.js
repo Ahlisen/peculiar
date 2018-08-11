@@ -298,6 +298,9 @@ class HomeScreen extends React.Component {
         return Directory.TEXT+"text_"+index+videoExt
     });
 
+    //Add credits snippet to end
+    parsedArray.push(Directory.VIDEO+"_CREDITS"+videoExt);
+
     Promise.all(promiseArray).then((values) => {
       console.log(values);
       this.merge(parsedArray);
