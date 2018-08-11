@@ -436,7 +436,7 @@ class HomeScreen extends React.Component {
               renderItem={this.renderOutput}
             />
           </View>
-          <KeyboardAvoidingView style={styles.textInputContainer} editable={Platform.OS === 'android' ? null : 'position'} enabled>
+          <KeyboardAvoidingView style={styles.textInputContainer} behavior={Platform.OS === 'android' ? null : 'position'} enabled>
             <TextInput
               style={styles.textInput}
               onChangeText={(text) => this.setState({text})}
