@@ -33,6 +33,7 @@ const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const textInputHeight = 70;
+const inputRows = 3
 
 // Loading animation
 const spinValue = new Animated.Value(0);
@@ -516,7 +517,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: width - itemWidth,
-    height: itemWidth * 3,
+    height: itemWidth * inputRows,
   },
   inputCaret: {
      borderLeftColor: 'black',
@@ -532,8 +533,10 @@ const styles = StyleSheet.create({
     margin: 3
   },
   buttonColumn: {
-    height: itemWidth*3,
-    width: itemWidth
+    height: itemWidth * inputRows,
+    width: itemWidth,
+    flex: 1,
+    justifyContent: 'space-between'
   },
   flexRight: {
     flexDirection: 'row',
