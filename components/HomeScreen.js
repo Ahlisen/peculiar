@@ -523,8 +523,8 @@ const styles = StyleSheet.create({
   bottomRight: {
   },
   image: {
-  	height: itemWidth-10,
-  	width: itemWidth-10,
+  	height: itemWidth-6,
+  	width: itemWidth-6,
     margin: 3
   },
   buttonColumn: {
