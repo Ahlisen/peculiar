@@ -353,6 +353,10 @@ class HomeScreen extends React.Component {
     }
 	}
 
+  setGender = (gender) => {
+    this.setState({ gender })
+  }
+
   addItem = (item) => {
     output = this.state.output
     output.push(item)
@@ -456,7 +460,17 @@ class HomeScreen extends React.Component {
               maxLength = {45}
               numberOfLines = {2}
             />
-            { !this.state.usingKeyboard && <View style={styles.textBlockingView}/> }
+            { !this.state.usingKeyboard && <View style={styles.textBlockingView}>
+              <TouchableHighlight underlayColor='#0000' onPress={() => this.setGender(0)}>
+                <Image style={[styles.image, this.state.gender != 0 ? styles.unfocused : {}]} source={require('../gui/han.png')} resizeMode='cover' />
+              </TouchableHighlight>
+              <TouchableHighlight underlayColor='#0000' onPress={() => this.setGender(1)}>
+                <Image style={[styles.image, this.state.gender != 1 ? styles.unfocused : {}]} source={require('../gui/hen.png')} resizeMode='cover' />
+              </TouchableHighlight>
+              <TouchableHighlight underlayColor='#0000' onPress={() => this.setGender(2)}>
+                <Image style={[styles.image, this.state.gender != 2 ? styles.unfocused : {}]} source={require('../gui/hon.png')} resizeMode='cover' />
+              </TouchableHighlight>
+            </View> }
           </KeyboardAvoidingView>
           <View style={styles.flexRight}>
             <View style={styles.input}>
@@ -490,6 +504,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
+  unfocused: {
+    height: itemWidth-24,
+    width: itemWidth-24,
+    margin: 12,
+    opacity: 0.5
+  },
   textInputContainer: {
     height: textInputHeight,
     alignItems: 'flex-start',
@@ -503,8 +523,11 @@ const styles = StyleSheet.create({
   },
   textBlockingView: {
     height:textInputHeight,
-    width: width,
-    marginTop: -textInputHeight
+    width: width-100,
+    marginHorizontal: 50,
+    marginTop: -textInputHeight,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
   },
   loading: {
     transform: [{rotate: spin}],
