@@ -34,6 +34,7 @@ const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const textInputHeight = 70;
 const inputRows = 4;
+const genderArray = ["m/","h/","w/"];
 
 // Loading animation
 const spinValue = new Animated.Value(0);
@@ -139,7 +140,8 @@ class HomeScreen extends React.Component {
       output: [],
       thumbnails: [],
       loading: false,
-      usingKeyboard: false
+      usingKeyboard: false,
+      gender: 1
     };
 
     if (Platform.OS === 'android') {
@@ -161,7 +163,11 @@ class HomeScreen extends React.Component {
     } else {
       Object.keys(icons).forEach(key => {
         const item = {key: incrementalCounter(), uri: icons[key], value: String(key)};
-        this.state.thumbnails.push(item);
+
+        if (!/(m|w)01/.test(item.value.split("_")[1])) {
+          this.state.thumbnails.push(item);
+        }
+
       });
     }
 
@@ -354,11 +360,21 @@ class HomeScreen extends React.Component {
 	}
 
   setGender = (gender) => {
-    this.setState({ gender })
+    this.setState({ gender:gender })
   }
 
   addItem = (item) => {
     output = this.state.output
+    let genderArray = ["m01","h01","w01"];
+
+    let split = item.value.split("_")
+
+    if (/(m|h|w)01/.test(split[1])) {
+      item.value = split[0]+"_"+genderArray[this.state.gender];
+
+      item.uri = Platform.OS  == "Android" ? "file://"+Directory.ICON+item.value+".png" : icons[item.value];
+    }
+
     output.push(item)
     this.setState({ output })
   };
@@ -481,8 +497,7 @@ class HomeScreen extends React.Component {
               />
             </View>
             <View style={styles.buttonColumn}>
-              <TouchableHighlight
-                onPress={ () => this.checkViability(this.state.output) }>
+              <TouchableHighlight underlayColor="red" onPress={() => this.checkViability(this.state.output)}>
                 <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
               </TouchableHighlight>
               <TouchableHighlight onPress={() => this.prepareKeyboard()}>
