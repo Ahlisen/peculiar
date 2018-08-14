@@ -1,6 +1,6 @@
 <resources>
 	<string name="app_name">Pictogram</string>
 
-	<string name="wait_file_download">Downloading pictograms…</string>
+	<string name="wait_file_download">Loading pictograms…</string>
 	<string name="progress_percent">%1$d%%</string>
 </resources>
