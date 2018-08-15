@@ -28,12 +28,12 @@ String.prototype.insert = function (index, string) {
 const {FFMPEGCommandline} = NativeModules;
 const TextToVideo = NativeModules.TextToVideo;
 const {width, height} = Dimensions.get('window');
-const columns = 7
-const itemWidth = width / columns;
+const columns = 6
+const itemWidth = width / (columns + 1);
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const textInputHeight = 70;
-const inputRows = 3
+const inputRows = 3;
 
 // Loading animation
 const spinValue = new Animated.Value(0);
@@ -353,6 +353,10 @@ class HomeScreen extends React.Component {
     }
 	}
 
+  setGender = (gender) => {
+    this.setState({ gender:gender })
+  }
+
   addItem = (item) => {
     output = this.state.output
     output.push(item)
@@ -467,8 +471,7 @@ class HomeScreen extends React.Component {
               />
             </View>
             <View style={styles.buttonColumn}>
-              <TouchableHighlight
-                onPress={ () => this.checkViability(this.state.output) }>
+              <TouchableHighlight underlayColor="red" onPress={() => this.checkViability(this.state.output)}>
                 <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
               </TouchableHighlight>
               <TouchableHighlight onPress={() => this.prepareKeyboard()}>
@@ -490,6 +493,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
+  unfocused: {
+    height: itemWidth-24,
+    width: itemWidth-24,
+    margin: 12,
+    opacity: 0.5
+  },
   textInputContainer: {
     height: textInputHeight,
     alignItems: 'flex-start',
@@ -503,8 +512,11 @@ const styles = StyleSheet.create({
   },
   textBlockingView: {
     height:textInputHeight,
-    width: width,
-    marginTop: -textInputHeight
+    width: width-100,
+    marginHorizontal: 50,
+    marginTop: -textInputHeight,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
   },
   loading: {
     transform: [{rotate: spin}],

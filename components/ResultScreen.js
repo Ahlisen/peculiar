@@ -137,7 +137,7 @@ class ResultScreen extends React.Component {
           }
         }>
           <Image style={styles.shareIcon}
-            source={require("../gui/forwardButton.png")} />
+            source={require("../gui/clearButton.png")} />
         </TouchableOpacity>
         </View>
       </SafeAreaView>
