@@ -34,7 +34,6 @@ const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const textInputHeight = 70;
 const inputRows = 3;
-const genderArray = ["m/","h/","w/"];
 
 // Loading animation
 const spinValue = new Animated.Value(0);
@@ -140,8 +139,7 @@ class HomeScreen extends React.Component {
       output: [],
       thumbnails: [],
       loading: false,
-      usingKeyboard: false,
-      gender: 1
+      usingKeyboard: false
     };
 
     if (Platform.OS === 'android') {
@@ -163,11 +161,7 @@ class HomeScreen extends React.Component {
     } else {
       Object.keys(icons).forEach(key => {
         const item = {key: incrementalCounter(), uri: icons[key], value: String(key)};
-
-        if (!/(m|w)01/.test(item.value.split("_")[1])) {
-          this.state.thumbnails.push(item);
-        }
-
+        this.state.thumbnails.push(item);
       });
     }
 
@@ -365,16 +359,6 @@ class HomeScreen extends React.Component {
 
   addItem = (item) => {
     output = this.state.output
-    let genderArray = ["m01","h01","w01"];
-
-    let split = item.value.split("_")
-
-    if (/(m|h|w)01/.test(split[1])) {
-      item.value = split[0]+"_"+genderArray[this.state.gender];
-
-      item.uri = Platform.OS  == "Android" ? "file://"+Directory.ICON+item.value+".png" : icons[item.value];
-    }
-
     output.push(item)
     this.setState({ output })
   };
@@ -476,17 +460,7 @@ class HomeScreen extends React.Component {
               maxLength = {45}
               numberOfLines = {2}
             />
-            { !this.state.usingKeyboard && <View style={styles.textBlockingView}>
-              <TouchableHighlight underlayColor='#0000' onPress={() => this.setGender(0)}>
-                <Image style={[styles.image, this.state.gender != 0 ? styles.unfocused : {}]} source={require('../gui/han.png')} resizeMode='cover' />
-              </TouchableHighlight>
-              <TouchableHighlight underlayColor='#0000' onPress={() => this.setGender(1)}>
-                <Image style={[styles.image, this.state.gender != 1 ? styles.unfocused : {}]} source={require('../gui/hen.png')} resizeMode='cover' />
-              </TouchableHighlight>
-              <TouchableHighlight underlayColor='#0000' onPress={() => this.setGender(2)}>
-                <Image style={[styles.image, this.state.gender != 2 ? styles.unfocused : {}]} source={require('../gui/hon.png')} resizeMode='cover' />
-              </TouchableHighlight>
-            </View> }
+            { !this.state.usingKeyboard && <View style={styles.textBlockingView}/> }
           </KeyboardAvoidingView>
           <View style={styles.flexRight}>
             <View style={styles.input}>
