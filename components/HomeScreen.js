@@ -33,7 +33,7 @@ const itemWidth = width / (columns + 1);
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const textInputHeight = 70;
-const inputRows = 4;
+const inputRows = 3;
 const genderArray = ["m/","h/","w/"];
 
 // Loading animation
