@@ -359,6 +359,7 @@ class HomeScreen extends React.Component {
 
   addItem = (item) => {
     output = this.state.output
+    item.key = incrementalCounter();
     output.push(item)
     this.setState({ output })
   };
