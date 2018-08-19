@@ -301,6 +301,7 @@ class HomeScreen extends React.Component {
     });
 
     //Add credits snippet to end
+    parsedArray.splice(0,0,Directory.VIDEO+"_INTRO"+videoExt)
     parsedArray.push(Directory.VIDEO+"_CREDITS"+videoExt);
 
     Promise.all(promiseArray).then((values) => {
