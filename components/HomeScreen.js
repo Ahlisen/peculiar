@@ -479,7 +479,7 @@ class HomeScreen extends React.Component {
               />
             </View>
             <View style={styles.buttonColumn}>
-              <TouchableHighlight underlayColor="red" onPress={() => this.checkViability(this.state.output)}>
+              <TouchableHighlight onPress={() => this.checkViability(this.state.output)}>
                 <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
               </TouchableHighlight>
               <TouchableHighlight onPress={() => this.prepareKeyboard()}>
