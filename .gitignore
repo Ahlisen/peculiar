@@ -52,6 +52,6 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 HomeScreen.ios.js
-videos/
-icons/
-assets/
+/videos/
+/icons/
+/assets/
