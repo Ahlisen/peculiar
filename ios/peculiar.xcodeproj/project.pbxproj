@@ -1483,7 +1483,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.peculiar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindglowing.pictogram;
 				PRODUCT_NAME = peculiar;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1511,7 +1511,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.peculiar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindglowing.pictogram;
 				PRODUCT_NAME = peculiar;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
