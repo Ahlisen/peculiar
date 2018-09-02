@@ -143,20 +143,26 @@ class HomeScreen extends React.Component {
     };
 
     if (Platform.OS === 'android') {
-      RNFS.copyFileAssets('fonts/Rubik-Regular.ttf', RNFS.DocumentDirectoryPath+'/Rubik-Regular.ttf')
-      .then(() => {
-        console.log("Moved font");
-        RNFS.readDir(RNFS.DocumentDirectoryPath)
-          .then(dir => {
-            console.log("docDirPath:", dir);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      RNFS.exists(RNFS.DocumentDirectoryPath+'/Rubik-Regular.ttf')
+        .then(exists => {
+          console.log('RUBIK EXISTS:', exists);
+          if (!exists) {
+            RNFS.copyFileAssets('fonts/Rubik-Regular.ttf', RNFS.DocumentDirectoryPath+'/Rubik-Regular.ttf')
+              .then(() => {
+                console.log("Moved font");
+                RNFS.readDir(RNFS.DocumentDirectoryPath)
+                  .then(dir => {
+                    console.log("docDirPath:", dir);
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
+        });
 
     } else {
       Object.keys(icons).forEach(key => {
@@ -300,6 +306,8 @@ class HomeScreen extends React.Component {
         return Directory.TEXT+"text_"+index+videoExt
     });
 
+    //Add intro snippet to start
+    parsedArray.unshift(Directory.VIDEO+"_INTRO"+videoExt)
     //Add credits snippet to end
     parsedArray.splice(0,0,Directory.VIDEO+"_INTRO"+videoExt)
     parsedArray.push(Directory.VIDEO+"_CREDITS"+videoExt);
