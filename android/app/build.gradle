@@ -1,8 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
 
-import com.android.build.OutputFile
-
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -74,7 +72,12 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-		entryFile: "index.js"
+		// whether to bundle JS and assets in debug mode
+		bundleInDebug: true, // TODO: Set to false
+		// whether to bundle JS and assets in release mode
+		bundleInRelease: true,
+		entryFile: "index.js",
+		root: "../../"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -87,7 +90,7 @@ apply from: "../../node_modules/react-native/react.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+def enableSeparateBuildPerCPUArchitecture = true
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
@@ -102,37 +105,53 @@ android {
 		applicationId "se.peculiar"
 		minSdkVersion 19
 		targetSdkVersion 27
-		versionCode 1
-		versionName "1.0.0"
+		versionCode 5
+		versionName "1.0.5"
+		setProperty("archivesBaseName", "Pictogram-$versionName-$versionCode")
 		ndk {
-			abiFilters "armeabi-v7a", "x86"
+//			abiFilters "armeabi-v7a", "x86"
 		}
 	}
+
+	signingConfigs {
+		release {
+			if (project.hasProperty('PECULIAR_RELEASE_STORE_FILE')) {
+				storeFile file(PECULIAR_RELEASE_STORE_FILE)
+				storePassword PECULIAR_RELEASE_STORE_PASSWORD
+				keyAlias PECULIAR_RELEASE_KEY_ALIAS
+				keyPassword PECULIAR_RELEASE_KEY_PASSWORD
+			}
+		}
+	}
+
 	splits {
 		abi {
 			reset()
 			enable enableSeparateBuildPerCPUArchitecture
 			universalApk false  // If true, also generate a universal APK
-			include "armeabi-v7a", "x86"
+			include "armeabi-v7a" //, "x86"
 		}
 	}
+
 	buildTypes {
 		release {
+			signingConfig signingConfigs.release
 			minifyEnabled enableProguardInReleaseBuilds
 			proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 		}
 	}
+
 	// applicationVariants are e.g. debug, release
 	applicationVariants.all { variant ->
 		variant.outputs.each { output ->
 			// For each separate APK per architecture, set a unique version code as described here:
 			// http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-			def versionCodes = ["armeabi-v7a": 1, "x86": 2]
-			def abi = output.getFilter(OutputFile.ABI)
-			if (abi != null) {  // null for the universal-debug, universal-release variants
-				output.versionCodeOverride =
-						versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
-			}
+//			def versionCodes = ["armeabi-v7a": 1, "x86": 2]
+//			def abi = output.getFilter(OutputFile.ABI)
+//			if (abi != null) {  // null for the universal-debug, universal-release variants
+//				output.versionCodeOverride =
+//						versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
+//			}
 		}
 	}
 

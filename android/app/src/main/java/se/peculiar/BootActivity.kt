@@ -34,7 +34,7 @@ class BootActivity : AppCompatActivity(), IDownloaderClient {
 	private val expansionFileSize = 42056585L
 	private val xAPKS = arrayOf(XAPKFile(
 			true, // true signifies a main file
-			1, // the version of the APK that the file was uploaded against
+			2, // the version of the APK that the file was uploaded against
 			expansionFileSize // the length of the file in bytes
 	))
 

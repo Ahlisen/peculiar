@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		  xmlns:tools="http://schemas.android.com/tools"
 		  package="se.peculiar">
+
+	<!-- Remove automatically added permission -->
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"
+					 tools:node="remove"/>
 
 	<!-- Required to access Google Play Licensing -->
 	<uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
