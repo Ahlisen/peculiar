@@ -165,25 +165,26 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
 + (void) addAudio:(NSString *)path fileName:(NSString *)fileName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject
 {
   AVMutableComposition* composition = [[AVMutableComposition alloc]init];
-  AVURLAsset* video1 = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:path]options:nil];
+  AVURLAsset* videoAsset = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:path]options:nil];
+  AVAssetTrack *videoAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+  CMTimeRange timeRange = CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration);
 
-  NSString * audioPath = [[NSBundle mainBundle] pathForResource:@"shorter" ofType:@"m4a"];
-  NSURL *audioURL = [NSURL fileURLWithPath:audioPath];
-  AVAsset *audioAsset = [AVAsset assetWithURL:audioURL];
+  NSString * audioPath = [[NSBundle mainBundle] pathForResource:@"pop" ofType:@"m4a"];
+  AVAsset *audioAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:audioPath]];
 
   //Create mutable composition of audio type
   AVMutableCompositionTrack *audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
 
-  [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,video1.duration)
+  [audioTrack insertTimeRange:timeRange
                       ofTrack:[[audioAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0] atTime:kCMTimeZero error:nil];
 
   AVMutableCompositionTrack* composedTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
 
-  [composedTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, video1.duration)
-                         ofTrack:[[video1 tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
+  [composedTrack insertTimeRange:timeRange
+                         ofTrack:[[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
                           atTime:kCMTimeZero error:nil];
 
-  AVAssetExportSession *session = [[AVAssetExportSession alloc]initWithAsset:composition presetName:AVAssetExportPresetPassthrough];
+  AVAssetExportSession *session = [[AVAssetExportSession alloc]initWithAsset:composition presetName:AVAssetExportPresetMediumQuality];
   session.outputFileType = AVFileTypeMPEG4;
 
   NSString *fileNameOut = [NSString stringWithFormat:@"text_%@.mp4", fileName];
@@ -196,9 +197,8 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
   [fileManager removeItemAtPath:[exportUrl path]  error:NULL];
 
   session.outputURL = exportUrl;
+  session.timeRange = timeRange;
 
-  CMTime half = CMTimeMultiplyByFloat64(session.asset.duration, 1);
-  session.timeRange = CMTimeRangeMake(kCMTimeZero, half);
   NSLog(@"%@", session);
 
   [session exportAsynchronouslyWithCompletionHandler:^{

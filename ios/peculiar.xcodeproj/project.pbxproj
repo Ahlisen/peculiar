@@ -42,10 +42,10 @@
 		6156F64A210F6BB6003A12AB /* libRNVideoEditor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619A28D820CAB32500EDC336 /* libRNVideoEditor.a */; };
 		6156F64B210F6BBE003A12AB /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619A28DD20CAB32500EDC336 /* libRNZipArchive.a */; };
 		6156F64C210F6BC7003A12AB /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6101FC5120D45C7400501017 /* libRNShare.a */; };
+		615A7154213F18A400E57271 /* pop.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 615A7153213F18A400E57271 /* pop.m4a */; };
 		6175B3D6211CC76F00228D1F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6175B3A9211CC76F00228D1F /* Social.framework */; };
 		6175B3D8211CC79300228D1F /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6175B3D7211CC79300228D1F /* MessageUI.framework */; };
 		61B0E2432114B9DC00765960 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		61C598B621063B2C00E13354 /* shorter.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 61C5988921063B2B00E13354 /* shorter.m4a */; };
 		61D14F1520E969BD00022D49 /* TextToVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D14F1420E969BD00022D49 /* TextToVideo.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -404,9 +404,9 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D2E8AE03C9B4D62821290B7 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		615A7153213F18A400E57271 /* pop.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = pop.m4a; sourceTree = "<group>"; };
 		6175B3A9211CC76F00228D1F /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		6175B3D7211CC79300228D1F /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		61C5988921063B2B00E13354 /* shorter.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = shorter.m4a; sourceTree = "<group>"; };
 		61D14EE720E9695C00022D49 /* TextToVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextToVideo.h; sourceTree = "<group>"; };
 		61D14F1420E969BD00022D49 /* TextToVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextToVideo.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -567,7 +567,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				61D14EE720E9695C00022D49 /* TextToVideo.h */,
 				61D14F1420E969BD00022D49 /* TextToVideo.m */,
-				61C5988921063B2B00E13354 /* shorter.m4a */,
+				615A7153213F18A400E57271 /* pop.m4a */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
@@ -1274,8 +1274,8 @@
 			files = (
 				6105D98C20FBD5AE009C4DD9 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				61C598B621063B2C00E13354 /* shorter.m4a in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				615A7154213F18A400E57271 /* pop.m4a in Resources */,
 				22FCB4E33F0F4ACB98E3A7A2 /* Rubik-Medium.ttf in Resources */,
 				F44D0E3E135A4C279CA086BA /* Rubik-Regular.ttf in Resources */,
 			);
@@ -1483,7 +1483,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.peculiar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindglowing.pictogram;
 				PRODUCT_NAME = peculiar;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1511,7 +1511,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.peculiar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindglowing.pictogram;
 				PRODUCT_NAME = peculiar;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

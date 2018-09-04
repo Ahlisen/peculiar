@@ -28,12 +28,12 @@ String.prototype.insert = function (index, string) {
 const {FFMPEGCommandline} = NativeModules;
 const TextToVideo = NativeModules.TextToVideo;
 const {width, height} = Dimensions.get('window');
-const columns = 6
-const itemWidth = width / (columns + 1);
+const columns = 7
+const itemWidth = width / columns;
 const videoExt = ".mp4";
 const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const textInputHeight = 70;
-const inputRows = 3;
+const inputRows = 4;
 
 // Loading animation
 const spinValue = new Animated.Value(0);
@@ -367,6 +367,7 @@ class HomeScreen extends React.Component {
 
   addItem = (item) => {
     output = this.state.output
+    item.key = incrementalCounter();
     output.push(item)
     this.setState({ output })
   };
@@ -473,7 +474,7 @@ class HomeScreen extends React.Component {
           <View style={styles.flexRight}>
             <View style={styles.input}>
               <FlatList
-                numColumns={columns}
+                numColumns={columns-1}
                 data={this.state.thumbnails}
                 renderItem={this.renderInput}
               />
