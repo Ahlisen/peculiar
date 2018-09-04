@@ -167,7 +167,7 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
   AVMutableComposition* composition = [[AVMutableComposition alloc]init];
   AVURLAsset* video1 = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:path]options:nil];
 
-  NSString * audioPath = [[NSBundle mainBundle] pathForResource:@"silence2" ofType:@"m4a"];
+  NSString * audioPath = [[NSBundle mainBundle] pathForResource:@"pop" ofType:@"m4a"];
   AVAsset *audioAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:audioPath]];
 
   //Create mutable composition of audio type
