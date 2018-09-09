@@ -117,7 +117,7 @@ class HomeScreen extends React.Component {
       {
         toValue: 1,
         duration: 1000,
-        easing: Easing.linear,
+        easing: Easing.bezier(0.68, -0.55, 0.265, 1.55),
         useNativeDriver: true
       }
     )
