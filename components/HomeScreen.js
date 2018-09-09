@@ -494,11 +494,6 @@ class HomeScreen extends React.Component {
   render() {
     return (
         <SafeAreaView style={styles.container}>
-         { this.state.loading && 
-           <Animated.Image
-            style={styles.loading}
-            source={require('../gui/loading.png')}/>
-          }
           <View style={styles.output}>
             <FlatList 
               ref="outputList"
@@ -543,6 +538,13 @@ class HomeScreen extends React.Component {
               </TouchableHighlight>
             </View>
           </View>
+          { this.state.loading && 
+           <View style={styles.overlay}>
+            <Animated.Image
+              style={styles.loading}
+              source={require('../gui/loading.png')}/>
+            </View>
+          }
         </SafeAreaView>
     );
   }
@@ -579,12 +581,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly'
   },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFFEE',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   loading: {
     transform: [{rotate: spin}],
     height: 100,
     width: 100,
-    position: 'absolute',
-    alignSelf: 'center'
   },
   output: {
     flex: 1,
