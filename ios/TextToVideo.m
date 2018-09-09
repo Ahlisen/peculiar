@@ -169,7 +169,7 @@ RCT_EXPORT_METHOD(generateAsync:(NSString *)text:(NSString *)index resolver:(RCT
   AVAssetTrack *videoAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
   CMTimeRange timeRange = CMTimeRangeMake(kCMTimeZero, videoAssetTrack.timeRange.duration);
 
-  NSString * audioPath = [[NSBundle mainBundle] pathForResource:@"pop" ofType:@"m4a"];
+  NSString * audioPath = [[NSBundle mainBundle] pathForResource:@"plopp4sec" ofType:@"m4a"];
   AVAsset *audioAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:audioPath]];
 
   //Create mutable composition of audio type
