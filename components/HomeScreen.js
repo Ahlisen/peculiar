@@ -35,6 +35,8 @@ const savedFilePath = Directory.PICTOGRAM+"pictogram"+videoExt;
 const textInputHeight = 70;
 const inputRows = 4;
 
+const caret = {key: -1, uri: '|', value: '|'};
+
 // Loading animation
 const spinValue = new Animated.Value(0);
 const spin = spinValue.interpolate({
@@ -102,7 +104,7 @@ class HomeScreen extends React.Component {
       
       resetOutput = this.props.navigation.getParam('reset', false);
       if (resetOutput) {
-        this.setState({ output: [] });
+        this.setOutput([]);
         this.props.navigation.setParams({ 'reset': false });
       }
     }
@@ -137,9 +139,11 @@ class HomeScreen extends React.Component {
 
     this.state = {
       output: [],
+      outputWithCaret: [caret],
       thumbnails: [],
       loading: false,
-      usingKeyboard: false
+      usingKeyboard: false,
+      caretIndex: -1
     };
 
     if (Platform.OS === 'android') {
@@ -369,7 +373,7 @@ class HomeScreen extends React.Component {
     output = this.state.output
     item.key = incrementalCounter();
     output.push(item)
-    this.setState({ output })
+    this.setOutput(output)
   };
 
   prepareKeyboard = () => {
@@ -386,40 +390,76 @@ class HomeScreen extends React.Component {
     if (text != undefined) {
       output = this.state.output
       output.push({ key: incrementalCounter(), uri: null, value: text })
-      this.setState({ output })
+      this.setOutput(output)
     }
     this.clearText()
   };
 
-  removeLastItem = () => {
-    RNFS.readDir(RNFS.CachesDirectoryPath).then((result) => {
-      console.log('GOT RESULT', result);
-    })
+  removeItemAt = (index) => {
+    if (index == -1) {
+      return
+    }
 
     output = this.state.output
     if (output.length > 0) {
-      output.pop()
+      output.splice(index >= 0 ? index : output.length-1, 1)
+      if (index >= output.length || index < -1) {
+        this.setState({ caretIndex: -1 }, () => { this.setOutput(output) })
+      } else {
+        this.setState({ caretIndex: index }, () => { this.setOutput(output) })
+      }
     }
-    this.setState({ output })
   };
 
-  renderOutput = ({item}) => {
+  setOutput = (output) => {
+    const caretIndex = this.state.caretIndex
+    this.setState({ output })
+    output = output.slice(0, output.length)
+    if (caretIndex == -1) {
+      output.splice(output.length, 0, caret)
+    }
+
+    this.setState({ outputWithCaret: output }, () => {
+      this.caretAnimation.start()
+    })
+  };
+
+  setCaretIndex = (index) => {
+    if (this.state.caretIndex != index) {
+      // Callback forces output list update
+      this.setState({ caretIndex: index }, () => { this.setOutput(this.state.output) })
+    }
+  }
+
+  renderOutput = ({item, index}) => {
     if (item.uri != null && item.uri.length == 1 && item.uri === '|') {
+
       return (
-        <Animated.View style={[styles.image, styles.inputCaret, {opacity: blink}]} />
+        <View style={styles.item}>
+          <Animated.View style={[styles.inputCaret, {opacity: blink}]} />
+        </View>
       )
+
     } else {
+
+      console.log("index:",index)
       let source = Platform.select({
         ios: item.uri != null ? item.uri : require('../gui/textButton.png'),
         android: item.uri != null ? {uri: item.uri} : require('../gui/textButton.png')
       });
+      let caretStyle = this.state.caretIndex == index ? [styles.inputCaret, {opacity: blink}] : [styles.inputCaret, {width: 0}];
+
       return (
-        <View>
-          <Image style={styles.image}
-          source={source}
-          resizeMode='cover' />
-        </View>
+        <TouchableHighlight onPress={() => { this.setCaretIndex(index) }}>
+          <View style={styles.item}>
+            <Animated.View style={caretStyle} />
+            <Image style={styles.image}
+              source={source}
+              resizeMode='cover' />
+          </View>
+        </TouchableHighlight>
       )
+
     }
   };
 
@@ -429,7 +469,8 @@ class HomeScreen extends React.Component {
       android: {uri: item.uri}
     });
     return (
-      <TouchableHighlight onPress={() => this.addItem(item)}>
+      <TouchableHighlight style={styles.item}
+        onPress={() => this.addItem(item)}>
         <Image style={styles.image}
         source={source}
         resizeMode='cover' />
@@ -450,9 +491,7 @@ class HomeScreen extends React.Component {
               ref="outputList"
               extraData={this.state}
               numColumns={columns}
-              data={
-                this.state.output.concat([{key: -1, uri: '|', value: '|'}])
-              }
+              data={this.state.outputWithCaret}
               renderItem={this.renderOutput}
               onContentSizeChange={() => this.refs.outputList.scrollToEnd({animated: true})}
             />
@@ -486,7 +525,7 @@ class HomeScreen extends React.Component {
               <TouchableHighlight onPress={() => this.prepareKeyboard()}>
                 <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
               </TouchableHighlight>
-              <TouchableHighlight onPress={() => this.removeLastItem()}>
+              <TouchableHighlight onPress={() => this.removeItemAt(this.state.caretIndex-1)}>
                 <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
               </TouchableHighlight>
             </View>
@@ -544,23 +583,30 @@ const styles = StyleSheet.create({
     height: itemWidth * inputRows,
   },
   inputCaret: {
-     borderLeftColor: 'black',
-     borderLeftWidth: 3,
-     width: width-2,
-     marginLeft: 2
+    height: itemWidth-6,
+    width: 3,
+    opacity: 0,
+    backgroundColor: 'black'
   },
-  bottomRight: {
+  item: {
+    height: itemWidth,
+    width: itemWidth,
+    padding: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'lightgreen'
   },
   image: {
   	height: itemWidth-6,
-  	width: itemWidth-6,
-    margin: 3
+    width: itemWidth-6,
+    backgroundColor: 'tomato'
   },
   buttonColumn: {
     height: itemWidth * inputRows,
     width: itemWidth,
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    padding: 3
   },
   flexRight: {
     flexDirection: 'row',
