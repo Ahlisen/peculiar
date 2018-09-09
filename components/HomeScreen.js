@@ -36,6 +36,7 @@ const textInputHeight = 70;
 const inputRows = 4;
 
 const caret = {key: -1, uri: '|', value: '|'};
+const empty = {key: -2, uri: '#', value: '#'}; // Used to place input caret at the end
 
 // Loading animation
 const spinValue = new Animated.Value(0);
@@ -371,8 +372,10 @@ class HomeScreen extends React.Component {
 
   addItem = (item) => {
     output = this.state.output
+    let index = this.state.caretIndex
+    index = index == -1 ? output.length : index
     item.key = incrementalCounter();
-    output.push(item)
+    output.splice(index, 0, item)
     this.setOutput(output)
   };
 
@@ -388,9 +391,7 @@ class HomeScreen extends React.Component {
 
   addTextItem = (text) => {
     if (text != undefined) {
-      output = this.state.output
-      output.push({ key: incrementalCounter(), uri: null, value: text })
-      this.setOutput(output)
+      this.addItem({ uri: null, value: text })
     }
     this.clearText()
   };
@@ -416,7 +417,9 @@ class HomeScreen extends React.Component {
     this.setState({ output })
     output = output.slice(0, output.length)
     if (caretIndex == -1) {
-      output.splice(output.length, 0, caret)
+      output.push(caret)
+    } else {
+      output.push(empty)
     }
 
     this.setState({ outputWithCaret: output }, () => {
@@ -432,26 +435,36 @@ class HomeScreen extends React.Component {
   }
 
   renderOutput = ({item, index}) => {
-    if (item.uri != null && item.uri.length == 1 && item.uri === '|') {
-
+    if (item.uri != null && item.uri.length == 1) {
+      if (item.uri === '|') {
       return (
         <View style={styles.item}>
           <Animated.View style={[styles.inputCaret, {opacity: blink}]} />
         </View>
       )
+      } else if (item.uri === '#') {
+        return (
+          <TouchableHighlight
+            onPress={() => { this.setCaretIndex(-1) }} >
+            <View style={styles.item} />
+          </TouchableHighlight>
+        )
+      }
 
     } else {
-
-      console.log("index:",index)
       let source = Platform.select({
         ios: item.uri != null ? item.uri : require('../gui/textButton.png'),
         android: item.uri != null ? {uri: item.uri} : require('../gui/textButton.png')
       });
-      let caretStyle = this.state.caretIndex == index ? [styles.inputCaret, {opacity: blink}] : [styles.inputCaret, {width: 0}];
+      const hasCaret = this.state.caretIndex == index;
+      const itemStyle = hasCaret ? [styles.item, {paddingHorizontal: 0}] : styles.item;
+      const caretStyle = hasCaret ?
+        [styles.inputCaret, {opacity: blink, marginRight: 3}] : 
+        [styles.inputCaret, {width: 0}];
 
       return (
         <TouchableHighlight onPress={() => { this.setCaretIndex(index) }}>
-          <View style={styles.item}>
+          <View style={itemStyle}>
             <Animated.View style={caretStyle} />
             <Image style={styles.image}
               source={source}
@@ -593,13 +606,11 @@ const styles = StyleSheet.create({
     width: itemWidth,
     padding: 3,
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'lightgreen'
+    alignItems: 'center'
   },
   image: {
   	height: itemWidth-6,
-    width: itemWidth-6,
-    backgroundColor: 'tomato'
+    width: itemWidth-6
   },
   buttonColumn: {
     height: itemWidth * inputRows,
