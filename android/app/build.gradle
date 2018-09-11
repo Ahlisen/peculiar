@@ -73,7 +73,7 @@ apply plugin: 'kotlin-android'
 
 project.ext.react = [
 		// whether to bundle JS and assets in debug mode
-		bundleInDebug: true, // TODO: Set to false
+		bundleInDebug: false,
 		// whether to bundle JS and assets in release mode
 		bundleInRelease: true,
 		entryFile: "index.js",
@@ -105,8 +105,8 @@ android {
 		applicationId "se.peculiar"
 		minSdkVersion 19
 		targetSdkVersion 27
-		versionCode 5
-		versionName "1.0.5"
+		versionCode 6
+		versionName "1.0.6"
 		setProperty("archivesBaseName", "Pictogram-$versionName-$versionCode")
 		ndk {
 //			abiFilters "armeabi-v7a", "x86"
