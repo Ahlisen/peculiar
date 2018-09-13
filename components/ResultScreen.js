@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
   Image,
-  Button,
   TouchableOpacity,
   SafeAreaView,
   Share
@@ -16,6 +14,7 @@ import RNShare from "react-native-share";
 
 import Directory from '../constants/Directory';
 import ProgressController from "./ProgressController";
+import AnimatedButton from './AnimatedButton';
 
 class ResultScreen extends React.Component {
   state = {
@@ -121,24 +120,21 @@ class ResultScreen extends React.Component {
             percent={completedPercentage}
             onNewPercent={this.onSeek.bind(this)} />
         </View>
+        
         <View style={styles.horizontal}>
-        <TouchableOpacity onPress={() => this.props.navigation.pop()}>
-          <Image style={styles.shareIcon}
-            source={require("../gui/backButton.png")} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.share}>
-          <Image style={styles.shareIcon}
-            source={require("../gui/shareButton.png")} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
+          <AnimatedButton onPress={() => this.props.navigation.pop()}>
+            <Image style={styles.actionButton} source={require("../gui/backButton.png")} />
+          </AnimatedButton>
+          <AnimatedButton onPress={this.share}>
+            <Image style={styles.actionButton} source={require("../gui/shareButton.png")} />
+          </AnimatedButton>
+          <AnimatedButton onPress={() => {
             const { navigation } = this.props;
             const { routeName, key } = navigation.getParam('homeRoute');
             navigation.navigate({ routeName, key, params: { 'reset': true } });
-          }
-        }>
-          <Image style={styles.shareIcon}
-            source={require("../gui/clearButton.png")} />
-        </TouchableOpacity>
+          }}>
+            <Image style={styles.actionButton} source={require("../gui/clearButton.png")} />
+          </AnimatedButton>
         </View>
       </SafeAreaView>
     );
@@ -170,7 +166,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.5)'
   },
-  shareIcon: {
+  actionButton: {
     width: 50,
     height: 50,
     margin: 10

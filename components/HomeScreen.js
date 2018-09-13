@@ -20,6 +20,7 @@ import RNFS from "react-native-fs";
 import RNVideoEditor from "react-native-video-editor";
 
 import Directory from '../constants/Directory';
+import AnimatedButton from './AnimatedButton';
 
 String.prototype.insert = function (index, string) {
   return this.substring(0, index) + string + this.substring(index, this.length);
@@ -463,14 +464,14 @@ class HomeScreen extends React.Component {
         [styles.inputCaret, {width: 0}];
 
       return (
-        <TouchableHighlight onPress={() => { this.setCaretIndex(index) }}>
+        <AnimatedButton onPress={() => { this.setCaretIndex(index) }}>
           <View style={itemStyle}>
             <Animated.View style={caretStyle} />
             <Image style={styles.image}
               source={source}
               resizeMode='cover' />
           </View>
-        </TouchableHighlight>
+        </AnimatedButton>
       )
 
     }
@@ -482,12 +483,11 @@ class HomeScreen extends React.Component {
       android: {uri: item.uri}
     });
     return (
-      <TouchableHighlight style={styles.item}
-        onPress={() => this.addItem(item)}>
+      <AnimatedButton style={styles.item} onPress={() => this.addItem(item)}>
         <Image style={styles.image}
         source={source}
         resizeMode='cover' />
-      </TouchableHighlight>
+      </AnimatedButton>
     )
   };
 
@@ -527,15 +527,15 @@ class HomeScreen extends React.Component {
               />
             </View>
             <View style={styles.buttonColumn}>
-              <TouchableHighlight onPress={() => this.checkViability(this.state.output)}>
+              <AnimatedButton onPress={() => this.checkViability(this.state.output)}>
                 <Image style={styles.image} source={require('../gui/renderButton.png')} resizeMode='cover' />
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this.prepareKeyboard()}>
+              </AnimatedButton>
+              <AnimatedButton onPress={() => this.prepareKeyboard()}>
                 <Image style={styles.image} source={require('../gui/textButton.png')} resizeMode='cover' />
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this.removeItemAt(this.state.caretIndex-1)}>
+              </AnimatedButton>
+              <AnimatedButton onPress={() => this.removeItemAt(this.state.caretIndex-1)}>
                 <Image style={styles.image} source={require('../gui/removeButton.png')} resizeMode='cover' />
-              </TouchableHighlight>
+              </AnimatedButton>
             </View>
           </View>
           { this.state.loading && 
