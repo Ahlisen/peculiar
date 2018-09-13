@@ -80,40 +80,39 @@ class ResultScreen extends React.Component {
     const completedPercentage = this.getCurrentTimePercentage(this.state.currentTime, this.state.duration);
 
     return (
-      <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
-        <View style={styles.videoContainer}>
-          <TouchableOpacity onPress={this.togglePlay}
-            style={styles.videoContainer}>
-            <Video source={{ uri: this.state.source }}   // Can be a URL or a local file.
-              ref={(ref) => {
-                this.player = ref
-              }}                                      // Store reference
-              rate={this.state.rate}                              // 0 is paused, 1 is normal.
-              volume={this.state.volume}                            // 0 is muted, 1 is normal.
-              muted={this.state.muted}                           // Mutes the audio entirely.
-              paused={this.state.paused}                          // Pauses playback entirely.
-              resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
-              repeat={true}                           // Repeat forever.
-              playInBackground={false}                // Audio continues to play when app entering background.
-              playWhenInactive={false}                // [iOS] Video continues to play when control or notification center are shown.
-              ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent.
-              progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
-              // onLoadStart={}            // Callback when video starts to load
-              onLoad={this.onLoad}                    // Callback when video loads
-              onProgress={this.onProgress}            // Callback every ~250ms with currentTime
-              // onEnd={}                      // Callback when playback finishes
-              onError={this.videoError}               // Callback when video cannot be loaded
-              // onBuffer={}                // Callback when remote video is buffering
-              // onTimedMetadata={}  // Callback when the stream receive some metadata
-              style={styles.video} />
-              { 
-                this.state.paused && <View style={styles.playIconContainer}>
-                  <Image style={styles.playIcon}
-                  source={require("../gui/renderButton.png")}/>
-                </View>
-              }
-            </TouchableOpacity>
-        </View>
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity onPress={this.togglePlay}
+          style={styles.videoContainer}>
+          <Video source={{ uri: this.state.source }}   // Can be a URL or a local file.
+            ref={(ref) => {
+              this.player = ref
+            }}                                      // Store reference
+            rate={this.state.rate}                              // 0 is paused, 1 is normal.
+            volume={this.state.volume}                            // 0 is muted, 1 is normal.
+            muted={this.state.muted}                           // Mutes the audio entirely.
+            paused={this.state.paused}                          // Pauses playback entirely.
+            resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
+            repeat={true}                           // Repeat forever.
+            playInBackground={false}                // Audio continues to play when app entering background.
+            playWhenInactive={false}                // [iOS] Video continues to play when control or notification center are shown.
+            ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent.
+            progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
+            // onLoadStart={}            // Callback when video starts to load
+            onLoad={this.onLoad}                    // Callback when video loads
+            onProgress={this.onProgress}            // Callback every ~250ms with currentTime
+            // onEnd={}                      // Callback when playback finishes
+            onError={this.videoError}               // Callback when video cannot be loaded
+            // onBuffer={}                // Callback when remote video is buffering
+            // onTimedMetadata={}  // Callback when the stream receive some metadata
+            style={styles.video} />
+            { 
+              this.state.paused && <View style={styles.playIconContainer}>
+                <Image style={styles.playIcon}
+                source={require("../gui/renderButton.png")}/>
+              </View>
+            }
+        </TouchableOpacity>
+        
         <View style={styles.progressBar}>
           <ProgressController duration={this.state.duration}
             currentTime={this.state.currentTime}
@@ -142,6 +141,12 @@ class ResultScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   videoContainer: {
     width: 400,
     height: 400
@@ -176,10 +181,9 @@ const styles = StyleSheet.create({
     margin: 20
   },
   horizontal: {
-    flex: 1,
     width: 400,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-evenly'
   }
 });
 
