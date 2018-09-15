@@ -30,7 +30,7 @@ export default class AnimatedButton extends Component {
     handlePressOut() {
         Animated.spring(this.springValue, {
             toValue: 1,
-            friction: 4,
+            friction: 3,
             tension: 200
         }).start();
     }
