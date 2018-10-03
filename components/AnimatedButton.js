@@ -11,8 +11,6 @@ export default class AnimatedButton extends Component {
         super(props);
         this.props = props;
 
-        console.log("Style:", this.props.style);
-
         this.handlePressIn = this.handlePressIn.bind(this);
         this.handlePressOut = this.handlePressOut.bind(this);
     }

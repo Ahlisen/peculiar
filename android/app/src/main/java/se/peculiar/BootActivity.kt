@@ -31,10 +31,10 @@ class BootActivity : AppCompatActivity(), IDownloaderClient {
 	private var mCancelValidation: Boolean = false
 
 	// TODO -> ALWAYS CHANGE THIS WHEN UPDATING APK EXPANSION FILE!!
-	private val expansionFileSize = 42056609L
+	private val expansionFileSize = 48438558L
 	private val xAPKS = arrayOf(XAPKFile(
 			true, // true signifies a main file
-			6, // the version of the APK that the file was uploaded against
+			8, // the version of the APK that the file was uploaded against
 			expansionFileSize // the length of the file in bytes
 	))
 
