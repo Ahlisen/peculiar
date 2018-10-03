@@ -241,6 +241,8 @@ class HomeScreen extends React.Component {
         ":fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='"+text+"', format=yuv420p",
         '-shortest',
         '-video_track_timescale', '12800',
+        '-c:v', 'libx264',
+        'x264opts', 'keyint:10',
         '-hide_banner',
         output
       ])
@@ -340,6 +342,8 @@ class HomeScreen extends React.Component {
             '-i', listLocation,
             '-c', 'copy',
             '-video_track_timescale', '12800',
+            '-c:v', 'libx264',
+            '-x264opts', 'keyint=10',
             '-hide_banner',
             output
           ])

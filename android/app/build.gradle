@@ -105,8 +105,8 @@ android {
 		applicationId "se.peculiar"
 		minSdkVersion 19
 		targetSdkVersion 27
-		versionCode 7
-		versionName "1.0.7"
+		versionCode 9
+		versionName "1.0.9"
 		setProperty("archivesBaseName", "Pictogram-$versionName-$versionCode")
 		ndk {
 //			abiFilters "armeabi-v7a", "x86"
