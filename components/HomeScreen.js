@@ -242,7 +242,7 @@ class HomeScreen extends React.Component {
         '-shortest',
         '-video_track_timescale', '12800',
         '-c:v', 'libx264',
-        'x264opts', 'keyint:10',
+        '-x264opts', 'keyint=10',
         '-hide_banner',
         output
       ])
@@ -342,8 +342,6 @@ class HomeScreen extends React.Component {
             '-i', listLocation,
             '-c', 'copy',
             '-video_track_timescale', '12800',
-            '-c:v', 'libx264',
-            '-x264opts', 'keyint=10',
             '-hide_banner',
             output
           ])
